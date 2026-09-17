@@ -2,9 +2,9 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Đổi kiểu chữ Facebook — dán thẳng vào status, bio, bình luận</title>
+<title>Ký tự giống chữ — thay từng chữ cái bằng ký tự Unicode trông giống hệt</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Gõ một câu, mỗi chữ cái một kiểu Unicode khác nhau hoặc một ký tự giống chữ, ghép lại thành chuỗi độc lạ để dán vào status, tin nhắn hay tiểu sử Facebook.">
+<meta name="description" content="Gõ một câu, mỗi chữ cái được thay bằng một ký tự Unicode khác nhưng nhìn gần như giống hệt — chữ Nga, Hy Lạp, Armenia, Cherokee, số, ký hiệu hoặc cặp ký tự ghép. Dán thẳng vào status, tin nhắn hay tiểu sử Facebook.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -65,12 +65,12 @@
     line-height:1.06;
     letter-spacing:-0.01em;
     margin:0 0 1.1rem;
-    max-width:15ch;
+    max-width:17ch;
   }
   .hero .lede{
     font-size:clamp(1rem,2.1vw,1.15rem);
     color:var(--ink-soft);
-    max-width:54ch;
+    max-width:56ch;
     margin:0 0 2.25rem;
     line-height:1.6;
   }
@@ -129,7 +129,7 @@
   }
   #demo-note{ color:var(--accent); }
 
-  /* ---------- Mix sections (shared style) ---------- */
+  /* ---------- Section ---------- */
   .mix-section{
     margin:2.5rem 0 0;
     padding:1.6rem 1.5rem;
@@ -152,6 +152,38 @@
     margin:0 0 1.35rem;
   }
   .count{ font-family:var(--font-mono); font-size:0.78rem; color:var(--ink-soft); white-space:nowrap; }
+
+  /* ---------- Controls ---------- */
+  .controls{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:1.1rem 1.6rem;
+    padding:0 0 1.1rem;
+    margin-bottom:1rem;
+    border-bottom:1px solid var(--line);
+  }
+  .ctrl{ display:flex; align-items:center; gap:0.5rem; }
+  .ctrl label, .ctrl span.ctrl-label{
+    font-family:var(--font-mono);
+    font-size:0.76rem;
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .ctrl input[type=range]{ width:110px; accent-color:var(--accent); cursor:pointer; }
+  .ctrl input[type=checkbox]{ accent-color:var(--accent); width:1rem; height:1rem; cursor:pointer; }
+  .ctrl select{
+    font-family:var(--font-mono);
+    font-size:0.76rem;
+    padding:0.3rem 0.45rem;
+    background:transparent;
+    color:var(--ink);
+    border:1px solid var(--line-strong);
+    border-radius:5px;
+    cursor:pointer;
+  }
+  .ctrl-value{ font-family:var(--font-mono); font-size:0.76rem; color:var(--accent); min-width:3.2ch; }
+
   .mix-toolbar{
     display:flex;
     justify-content:space-between;
@@ -226,6 +258,48 @@
   .mix-reroll:active{ transform:rotate(60deg); }
   .mix-reroll:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
 
+  /* ---------- Bảng tra ký tự ---------- */
+  .table-wrap{ overflow-x:auto; margin-top:0.5rem; }
+  table.glyph-table{ border-collapse:collapse; width:100%; font-size:0.95rem; }
+  table.glyph-table th, table.glyph-table td{
+    border-bottom:1px solid var(--line);
+    padding:0.45rem 0.6rem;
+    text-align:left;
+    vertical-align:top;
+  }
+  table.glyph-table th{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    font-weight:500;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  table.glyph-table td.src{ font-family:var(--font-mono); font-weight:600; width:3.5rem; }
+  .glyph-chip{
+    display:inline-block;
+    padding:0.12rem 0.4rem;
+    margin:0.1rem 0.15rem 0.1rem 0;
+    border:1px solid var(--line);
+    border-radius:4px;
+    cursor:pointer;
+    background:transparent;
+    color:var(--ink);
+    font-size:0.95rem;
+    font-family:var(--font-display);
+  }
+  .glyph-chip:hover{ border-color:var(--accent); color:var(--accent); }
+  .glyph-chip.copied{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+
+  details.lookup{ margin-top:2.5rem; }
+  details.lookup > summary{
+    font-family:var(--font-mono);
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    cursor:pointer;
+    padding:0.6rem 0;
+  }
+  details.lookup > summary:hover{ color:var(--accent); }
+
   /* ---------- Footer ---------- */
   .site-footer{
     margin-top:3.5rem;
@@ -246,8 +320,8 @@
 <div class="page">
 
   <header class="hero">
-    <h1>Chữ thường, đăng lên hơi chán.</h1>
-    <p class="lede">Gõ một câu bất kỳ: đổi thành nhiều kiểu chữ Unicode khác nhau, trộn ngẫu nhiên nhiều kiểu trong cùng một từ, hoặc thay từng chữ bằng một ký tự khác trông giống hệt nó — dán thẳng vào status, tin nhắn hay tiểu sử Facebook, không cần cài thêm gì.</p>
+    <h1>Cùng một chữ, khác từng ký tự.</h1>
+    <p class="lede">Gõ một câu bất kỳ: mỗi chữ cái sẽ được thay bằng một ký tự Unicode khác nhưng nhìn gần như giống hệt — chữ Nga, Hy Lạp, Armenia, Cherokee, Coptic, chữ có dấu phụ, số, ký hiệu, hoặc cặp ký tự ghép lại thành hình giống chữ. Dán thẳng vào status, tin nhắn hay tiểu sử Facebook, không cần cài thêm gì.</p>
 
     <div class="hero-demo">
       <span class="hero-demo-label">Ví dụ, chữ "Telegram":</span>
@@ -257,22 +331,42 @@
     <label class="field-label" for="text-input">Văn bản của bạn</label>
     <input id="text-input" type="text" autocomplete="off" spellcheck="false" placeholder="Gõ gì đó đi…" maxlength="300">
     <p class="note" id="demo-note">Đang xem trước bằng chữ "Telegram" — gõ nội dung của bạn ở trên để thay thế.</p>
-    <p class="note">Dấu tiếng Việt (ă, â, ê, ô, ơ, ư, đ và các thanh điệu) sẽ giữ nguyên ở một số kiểu chữ đặc biệt, do giới hạn của bảng mã Unicode.</p>
+    <p class="note">Chữ tiếng Việt có dấu (ă, â, ê, ô, ơ, ư, đ và các thanh điệu) cũng được đổi: ký tự thay thế trông giống hệt bản gốc nhưng được dựng từ chữ nền + dấu rời, nên mã bên trong khác nhau.</p>
   </header>
 
   <section class="mix-section">
-    <h2>Trộn kiểu chữ</h2>
-    <p>Mỗi chữ cái trong từ được bốc ngẫu nhiên từ một kiểu khác nhau rồi ghép lại — ví dụ "Telegram" có thể ra T đậm, a chữ thảo, c Gothic... Nhấn vào một dòng để chép, hoặc bấm nút xoay để đổi riêng dòng đó.</p>
-    <div class="mix-toolbar">
-      <button type="button" class="ghost-btn" id="mix-regenerate-all">Tạo lại tất cả</button>
-      <span class="count" id="mix-count"></span>
-    </div>
-    <div id="mix-output"></div>
-  </section>
-
-  <section class="mix-section">
     <h2>Trộn ký tự giống chữ</h2>
-    <p>Mỗi chữ cái được thay bằng một ký tự Unicode khác nhưng có hình dáng giống nó — ví dụ chữ "T" có thể ra chữ Т tiếng Nga, chữ "l" ra số "1" hoặc chữ "I", chữ "e" ra ký hiệu "∈"... chứ không phải cùng một chữ T đổi sang kiểu font khác. Nhấn vào một dòng để chép, hoặc bấm nút xoay để đổi riêng dòng đó.</p>
+    <p>Mỗi chữ cái được bốc ngẫu nhiên một ký tự khác có hình dáng tương tự — "T" có thể ra Т tiếng Nga hoặc Ꭲ Cherokee, "l" ra "1", "I" hay "ℓ", "e" ra "е", "ė" hay "∈". Chỉnh các tuỳ chọn bên dưới để đổi độ mạnh và loại ký tự được dùng. Nhấn vào một dòng để chép, bấm nút xoay để đổi riêng dòng đó.</p>
+
+    <div class="controls">
+      <div class="ctrl">
+        <label for="intensity">Mức độ thay</label>
+        <input type="range" id="intensity" min="10" max="100" step="10" value="100">
+        <span class="ctrl-value" id="intensity-value">100%</span>
+      </div>
+      <div class="ctrl">
+        <input type="checkbox" id="opt-nums" checked>
+        <label for="opt-nums">Số &amp; ký hiệu (0 1 $ ×)</label>
+      </div>
+      <div class="ctrl">
+        <input type="checkbox" id="opt-multi">
+        <label for="opt-multi">Ký tự ghép (rn, vv, cl)</label>
+      </div>
+      <div class="ctrl">
+        <input type="checkbox" id="opt-accent" checked>
+        <label for="opt-accent">Chữ có dấu phụ (ạ ė ń)</label>
+      </div>
+      <div class="ctrl">
+        <label for="variant-count">Số dòng</label>
+        <select id="variant-count">
+          <option>6</option>
+          <option selected>10</option>
+          <option>16</option>
+          <option>24</option>
+        </select>
+      </div>
+    </div>
+
     <div class="mix-toolbar">
       <button type="button" class="ghost-btn" id="look-regenerate-all">Tạo lại tất cả</button>
       <span class="count" id="look-count"></span>
@@ -280,8 +374,20 @@
     <div id="look-output"></div>
   </section>
 
+  <details class="lookup">
+    <summary>Xem toàn bộ bảng ký tự giống chữ (nhấn vào ký tự để chép)</summary>
+    <div class="table-wrap">
+      <table class="glyph-table">
+        <thead>
+          <tr><th>Chữ</th><th>Các ký tự trông giống</th></tr>
+        </thead>
+        <tbody id="glyph-table-body"></tbody>
+      </table>
+    </div>
+  </details>
+
   <footer class="site-footer">
-    Đây không phải các font chữ thật, mà là những bộ ký tự Unicode riêng biệt cho từng kiểu — vì vậy dán được ở hầu hết mọi nơi cho phép nhập văn bản, kể cả ngoài Facebook. Một vài kiểu chỉ hỗ trợ chữ cái và số cơ bản; trình đọc màn hình cũng có thể đọc các ký tự này khác với chữ thường.
+    Đây không phải font chữ, mà là những ký tự Unicode riêng biệt có hình dáng trùng nhau (gọi là homoglyph) — vì vậy dán được ở hầu hết mọi nơi cho phép nhập văn bản, kể cả ngoài Facebook. Lưu ý: chuỗi đã đổi ký tự sẽ không còn tìm được bằng chức năng tìm kiếm thông thường, trình đọc màn hình đọc sai, và một số nền tảng có thể tự chuẩn hoá lại hoặc chặn tên hiển thị dùng kiểu này.
   </footer>
 
 </div>
@@ -290,213 +396,265 @@
 (function(){
   "use strict";
 
-  var A = 65, Zc = 90, a = 97, z = 122, d0 = 48, d9 = 57;
+  /* ============================================================
+     BỘ KÝ TỰ GIỐNG CHỮ
+     BASE  : chữ cái từ bảng mã khác (Cyrillic, Hy Lạp, Armenia,
+             Cherokee, Coptic, Canadian syllabics, fullwidth, số La Mã…)
+     ACCENT: chữ Latin có dấu phụ
+     NUM   : số và ký hiệu trông giống chữ
+     MULTI : cặp/bộ ký tự ghép lại thành hình giống chữ
+     ============================================================ */
 
-  function mathAlpha(str, upperStart, lowerStart, digitStart, holes){
-    holes = holes || {};
-    var out = '';
-    for (var i = 0; i < str.length; i++){
-      var ch = str[i];
-      if (holes[ch] !== undefined){ out += holes[ch]; continue; }
-      var code = ch.charCodeAt(0);
-      if (upperStart != null && code >= A && code <= Zc) out += String.fromCodePoint(upperStart + (code - A));
-      else if (lowerStart != null && code >= a && code <= z) out += String.fromCodePoint(lowerStart + (code - a));
-      else if (digitStart != null && code >= d0 && code <= d9) out += String.fromCodePoint(digitStart + (code - d0));
-      else out += ch;
-    }
-    return out;
-  }
-
-  var H_ITALIC = { h: '\u210E' };
-  var H_SCRIPT = { B:'\u212C', E:'\u2130', F:'\u2131', H:'\u210B', I:'\u2110', L:'\u2112', M:'\u2133', R:'\u211B', e:'\u212F', g:'\u210A', o:'\u2134' };
-  var H_FRAKTUR = { C:'\u212D', H:'\u210C', I:'\u2111', R:'\u211C', Z:'\u2128' };
-  var H_DSTRUCK = { C:'\u2102', H:'\u210D', N:'\u2115', P:'\u2119', Q:'\u211A', R:'\u211D', Z:'\u2124' };
-
-  var bold           = function(s){ return mathAlpha(s, 0x1D400, 0x1D41A, 0x1D7CE); };
-  var italic         = function(s){ return mathAlpha(s, 0x1D434, 0x1D44E, null, H_ITALIC); };
-  var boldItalic     = function(s){ return mathAlpha(s, 0x1D468, 0x1D482, null); };
-  var script         = function(s){ return mathAlpha(s, 0x1D49C, 0x1D4B6, null, H_SCRIPT); };
-  var boldScript      = function(s){ return mathAlpha(s, 0x1D4D0, 0x1D4EA, null); };
-  var fraktur         = function(s){ return mathAlpha(s, 0x1D504, 0x1D51E, null, H_FRAKTUR); };
-  var boldFraktur     = function(s){ return mathAlpha(s, 0x1D56C, 0x1D586, null); };
-  var doubleStruck     = function(s){ return mathAlpha(s, 0x1D538, 0x1D552, 0x1D7D8, H_DSTRUCK); };
-  var sans             = function(s){ return mathAlpha(s, 0x1D5A0, 0x1D5BA, 0x1D7E2); };
-  var sansBold         = function(s){ return mathAlpha(s, 0x1D5D4, 0x1D5EE, 0x1D7EC); };
-  var sansItalic       = function(s){ return mathAlpha(s, 0x1D608, 0x1D622, null); };
-  var sansBoldItalic   = function(s){ return mathAlpha(s, 0x1D63C, 0x1D656, null); };
-  var monospace        = function(s){ return mathAlpha(s, 0x1D670, 0x1D68A, 0x1D7F6); };
-
-  function fullwidth(str){
-    var out = '';
-    for (var i = 0; i < str.length; i++){
-      var ch = str[i], code = ch.charCodeAt(0);
-      if (ch === ' ') out += '\u3000';
-      else if (code >= A && code <= Zc) out += String.fromCodePoint(0xFF21 + (code - A));
-      else if (code >= a && code <= z) out += String.fromCodePoint(0xFF41 + (code - a));
-      else if (code >= d0 && code <= d9) out += String.fromCodePoint(0xFF10 + (code - d0));
-      else out += ch;
-    }
-    return out;
-  }
-
-  var CIRCLE_DIGIT = {'0':'\u24EA','1':'\u2460','2':'\u2461','3':'\u2462','4':'\u2463','5':'\u2464','6':'\u2465','7':'\u2466','8':'\u2467','9':'\u2468'};
-  function circled(str){
-    var out = '';
-    for (var i = 0; i < str.length; i++){
-      var ch = str[i], code = ch.charCodeAt(0);
-      if (CIRCLE_DIGIT[ch]) out += CIRCLE_DIGIT[ch];
-      else if (code >= A && code <= Zc) out += String.fromCodePoint(0x24B6 + (code - A));
-      else if (code >= a && code <= z) out += String.fromCodePoint(0x24D0 + (code - a));
-      else out += ch;
-    }
-    return out;
-  }
-
-  function squared(str){
-    var out = '', up = str.toUpperCase();
-    for (var i = 0; i < up.length; i++){
-      var ch = up[i], code = ch.charCodeAt(0);
-      out += (code >= A && code <= Zc) ? String.fromCodePoint(0x1F130 + (code - A)) : ch;
-    }
-    return out;
-  }
-
-  function parenthesized(str){
-    var out = '', low = str.toLowerCase();
-    for (var i = 0; i < low.length; i++){
-      var ch = low[i], code = ch.charCodeAt(0);
-      out += (code >= a && code <= z) ? String.fromCodePoint(0x249C + (code - a)) : ch;
-    }
-    return out;
-  }
-
-  var SMALLCAPS = { a:'\u1D00', b:'\u0299', c:'\u1D04', d:'\u1D05', e:'\u1D07', f:'\uA730', g:'\u0262', h:'\u029C', i:'\u026A', j:'\u1D0A', k:'\u1D0B', l:'\u029F', m:'\u1D0D', n:'\u0274', o:'\u1D0F', p:'\u1D18', r:'\u0280', t:'\u1D1B', u:'\u1D1C', v:'\u1D20', w:'\u1D21', y:'\u028F', z:'\u1D22' };
-  function smallCaps(str){
-    var out = '';
-    for (var i = 0; i < str.length; i++){
-      var lo = str[i].toLowerCase();
-      out += SMALLCAPS[lo] || str[i];
-    }
-    return out;
-  }
-
-  var SUP = { a:'\u1D43', b:'\u1D47', c:'\u1D9C', d:'\u1D48', e:'\u1D49', f:'\u1DA0', g:'\u1D4D', h:'\u02B0', i:'\u2071', j:'\u02B2', k:'\u1D4F', l:'\u02E1', m:'\u1D50', n:'\u207F', o:'\u1D52', p:'\u1D56', r:'\u02B3', s:'\u02E2', t:'\u1D57', u:'\u1D58', v:'\u1D5B', w:'\u02B7', x:'\u02E3', y:'\u02B8', z:'\u1DBB',
-    A:'\u1D2C', B:'\u1D2E', D:'\u1D30', E:'\u1D31', G:'\u1D33', H:'\u1D34', I:'\u1D35', J:'\u1D36', K:'\u1D37', L:'\u1D38', M:'\u1D39', N:'\u1D3A', O:'\u1D3C', P:'\u1D3E', R:'\u1D3F', T:'\u1D40', U:'\u1D41', V:'\u2C7D', W:'\u1D42',
-    '0':'\u2070','1':'\u00B9','2':'\u00B2','3':'\u00B3','4':'\u2074','5':'\u2075','6':'\u2076','7':'\u2077','8':'\u2078','9':'\u2079','+':'\u207A','-':'\u207B','=':'\u207C','(':'\u207D',')':'\u207E' };
-  function superscript(str){
-    var out = '';
-    for (var i = 0; i < str.length; i++) out += SUP[str[i]] || str[i];
-    return out;
-  }
-
-  var SUB = { a:'\u2090', e:'\u2091', h:'\u2095', i:'\u1D62', j:'\u2C7C', k:'\u2096', l:'\u2097', m:'\u2098', n:'\u2099', o:'\u2092', p:'\u209A', r:'\u1D63', s:'\u209B', t:'\u209C', u:'\u1D64', v:'\u1D65', x:'\u2093',
-    '0':'\u2080','1':'\u2081','2':'\u2082','3':'\u2083','4':'\u2084','5':'\u2085','6':'\u2086','7':'\u2087','8':'\u2088','9':'\u2089','+':'\u208A','-':'\u208B','=':'\u208C','(':'\u208D',')':'\u208E' };
-  function subscript(str){
-    var out = '';
-    for (var i = 0; i < str.length; i++){
-      var ch = str[i], lo = ch.toLowerCase();
-      out += SUB[lo] !== undefined ? SUB[lo] : (SUB[ch] !== undefined ? SUB[ch] : ch);
-    }
-    return out;
-  }
-
-  function decorate(str, mark){
-    var out = '';
-    for (var i = 0; i < str.length; i++) out += str[i] + mark;
-    return out;
-  }
-  var strikethrough = function(s){ return decorate(s, '\u0336'); };
-  var underline      = function(s){ return decorate(s, '\u0332'); };
-  var dotted          = function(s){ return decorate(s, '\u0307'); };
-  var wavyUnderline    = function(s){ return decorate(s, '\u0330'); };
-
-  var FLIP = { a:'ɐ', b:'q', c:'ɔ', d:'p', e:'ǝ', f:'ɟ', g:'ƃ', h:'ɥ', i:'ᴉ', j:'ɾ', k:'ʞ', l:'l', m:'ɯ', n:'u', o:'o', p:'d', q:'b', r:'ɹ', s:'s', t:'ʇ', u:'n', v:'ʌ', w:'ʍ', x:'x', y:'ʎ', z:'z',
-    A:'∀', B:'𐐒', C:'Ɔ', D:'ᗡ', E:'Ǝ', F:'Ⅎ', G:'⅁', H:'H', I:'I', J:'ſ', K:'Ʞ', L:'˥', M:'W', N:'N', O:'O', P:'Ԁ', Q:'Ό', R:'ᴚ', S:'S', T:'⊥', U:'∩', V:'Λ', W:'M', X:'X', Y:'⅄', Z:'Z',
-    '0':'0','1':'Ɩ','2':'ᄅ','3':'Ɛ','4':'ㄣ','5':'ϛ','6':'9','7':'ㄥ','8':'8','9':'6',
-    '.':'˙',',':"'","'":',','"':',,','?':'¿','!':'¡','[':']',']':'[','(':')',')':'(','{':'}','}':'{','<':'>','>':'<','&':'⅋','_':'‾' };
-  function flipText(str){
-    var arr = [];
-    for (var i = 0; i < str.length; i++){ var ch = str[i]; arr.push(FLIP[ch] !== undefined ? FLIP[ch] : ch); }
-    return arr.reverse().join('');
-  }
-
-  function reversed(str){ return str.split('').reverse().join(''); }
-  function spaced(str){ return str.split('').join(' '); }
-
-  var STYLES = [
-    {group:'Đậm & nghiêng', name:'Đậm', tag:'bold', fn:bold},
-    {group:'Đậm & nghiêng', name:'Nghiêng', tag:'italic', fn:italic},
-    {group:'Đậm & nghiêng', name:'Đậm nghiêng', tag:'bold italic', fn:boldItalic},
-    {group:'Nét thảo & cổ điển', name:'Chữ thảo', tag:'script', fn:script},
-    {group:'Nét thảo & cổ điển', name:'Chữ thảo đậm', tag:'bold script', fn:boldScript},
-    {group:'Nét thảo & cổ điển', name:'Gothic', tag:'fraktur', fn:fraktur},
-    {group:'Nét thảo & cổ điển', name:'Gothic đậm', tag:'bold fraktur', fn:boldFraktur},
-    {group:'Nét thảo & cổ điển', name:'Viền rỗng', tag:'double-struck', fn:doubleStruck},
-    {group:'Không chân & đánh máy', name:'Không chân', tag:'sans-serif', fn:sans},
-    {group:'Không chân & đánh máy', name:'Không chân đậm', tag:'sans bold', fn:sansBold},
-    {group:'Không chân & đánh máy', name:'Không chân nghiêng', tag:'sans italic', fn:sansItalic},
-    {group:'Không chân & đánh máy', name:'Không chân đậm nghiêng', tag:'sans bold italic', fn:sansBoldItalic},
-    {group:'Không chân & đánh máy', name:'Đánh máy', tag:'monospace', fn:monospace},
-    {group:'Ký tự đặc biệt', name:'Toàn chiều rộng', tag:'fullwidth', fn:fullwidth},
-    {group:'Ký tự đặc biệt', name:'Chữ hoa nhỏ', tag:'small caps', fn:smallCaps},
-    {group:'Ký tự đặc biệt', name:'Khoanh tròn', tag:'circled', fn:circled},
-    {group:'Ký tự đặc biệt', name:'Ô vuông', tag:'squared', fn:squared},
-    {group:'Ký tự đặc biệt', name:'Trong ngoặc đơn', tag:'parenthesized', fn:parenthesized},
-    {group:'Ký tự đặc biệt', name:'Chỉ số trên', tag:'superscript', fn:superscript},
-    {group:'Ký tự đặc biệt', name:'Chỉ số dưới', tag:'subscript', fn:subscript},
-    {group:'Hiệu ứng', name:'Gạch ngang', tag:'strikethrough', fn:strikethrough},
-    {group:'Hiệu ứng', name:'Gạch chân', tag:'underline', fn:underline},
-    {group:'Hiệu ứng', name:'Chấm trên đầu', tag:'dotted', fn:dotted},
-    {group:'Hiệu ứng', name:'Gạch sóng', tag:'wavy', fn:wavyUnderline},
-    {group:'Hiệu ứng', name:'Lộn ngược', tag:'flip', fn:flipText, mix:false},
-    {group:'Hiệu ứng', name:'Đảo ngược', tag:'reverse', fn:reversed, mix:false},
-    {group:'Hiệu ứng', name:'Cách đều chữ', tag:'spaced', fn:spaced, mix:false}
-  ];
-
-  // ---------- Look-alike homoglyph map: each letter -> visually similar Unicode candidates ----------
-  var HOMO = {
-    a:['а','ạ','ą','α'], A:['А','Α','Ā'],
-    b:['Ь','ß','β'], B:['В','Β','8'],
-    c:['с','ϲ','ç'], C:['С','Ϲ','Ç'],
-    d:['ԁ','đ','ð'], D:['Ď','Ð'],
-    e:['е','∈','3','ë'], E:['Е','Ε','3'],
-    f:['ƒ'], F:['Ϝ'],
-    g:['ɡ','ǥ','9'], G:['Ԍ'],
-    h:['һ','н','ħ'], H:['Н','Η'],
-    i:['і','1','l','ι'], I:['І','1','l','Ι'],
-    j:['ј','ʝ'], J:['Ј'],
-    k:['κ','к'], K:['К','Κ'],
-    l:['1','I','ł','ℓ'], L:['ᒪ','Ⅼ'],
-    m:['м','rn'], M:['М','Μ'],
-    n:['ո','η','ñ'], N:['Ν','Ⲛ'],
-    o:['о','0','ο','ø'], O:['О','0','Ο'],
-    p:['р','ρ','þ'], P:['Р','Ρ'],
-    q:['ԛ','9'], Q:['Ԛ'],
-    r:['г','ř'], R:['Ʀ'],
-    s:['ѕ','$','5'], S:['Ѕ','5'],
-    t:['т','7','ţ'], T:['Т','7'],
-    u:['υ','ù'], U:['Ս'],
-    v:['ѵ','ν'], V:['Ѵ','Ν'],
-    w:['ѡ','ŵ'], W:['Ѡ'],
-    x:['х','×'], X:['Х','Χ'],
-    y:['у','γ','ý'], Y:['У','Υ'],
-    z:['ᴢ','ż','2'], Z:['Ζ','Ż']
+  var BASE = {
+    a:['а','α','ɑ','⍺','ａ','ᴀ','ɒ'],
+    A:['А','Α','Ꭺ','Ａ','ᗅ','Ꙗ'],
+    b:['Ь','ƅ','ᖯ','Ƅ','ｂ','ƀ','б'],
+    B:['В','Β','Ᏼ','Ᏸ','ʙ','Ｂ','ᗷ'],
+    c:['с','ϲ','ᴄ','ⅽ','ｃ','ꮯ','ϛ'],
+    C:['С','Ϲ','Ⅽ','Ꮯ','Ｃ','Ⲥ','Ϛ'],
+    d:['ԁ','ⅾ','ｄ','ɗ','ᑯ','ժ','Ꮷ'],
+    D:['Ꭰ','Ⅾ','Ｄ','ᗞ','ᴅ','Ꭰ'],
+    e:['е','ҽ','ｅ','ᥱ','ℯ','ⅇ','ꭼ'],
+    E:['Е','Ε','Ꭼ','Ｅ','ᴇ','Ⲉ','Ꭼ'],
+    f:['ƒ','ſ','ϝ','ｆ','ꞙ','ẝ'],
+    F:['Ϝ','Ƒ','Ｆ','ꜰ','ℱ','Ғ'],
+    g:['ɡ','ց','ｇ','ƍ','ɢ','ǥ'],
+    G:['Ԍ','Ꮐ','Ｇ','ɢ','Ᏻ','Ꮆ'],
+    h:['һ','հ','ｈ','ℎ','Ꮒ','ħ'],
+    H:['Н','Η','Ꮋ','Ｈ','ʜ','Ⲏ','Н'],
+    i:['і','ı','ɪ','ｉ','ι','ⅰ','і'],
+    I:['І','Ι','Ⅰ','Ｉ','ǀ','Ⲓ','ӏ'],
+    j:['ј','ʝ','ϳ','ｊ','ɉ','ј'],
+    J:['Ј','Ꭻ','Ｊ','ᴊ','Ʝ','Ⴑ'],
+    k:['κ','к','ｋ','ⲕ','ᴋ','ĸ'],
+    K:['К','Κ','Ꮶ','Ｋ','K','Ⲕ','ᛕ'],
+    l:['ⅼ','ℓ','ǀ','ｌ','ł','і','ɭ','ʟ'],
+    L:['Ꮮ','Ⅼ','Ｌ','ʟ','ᒪ','Ⳑ','Ł'],
+    m:['м','ⅿ','ｍ','ᴍ','ɯ','ᶆ'],
+    M:['М','Μ','Ꮇ','Ⅿ','Ｍ','ᴍ','Ⲙ'],
+    n:['ո','ｎ','ɴ','ᥒ','ᴨ','ռ'],
+    N:['Ν','Ⲛ','Ꮑ','Ｎ','ɴ','Ν','ᴎ'],
+    o:['о','ο','օ','ｏ','ᴏ','੦','૦','օ'],
+    O:['О','Ο','Օ','Ⲟ','Ｏ','Ꮎ','ᴏ'],
+    p:['р','ρ','ｐ','ⲣ','ք','þ'],
+    P:['Р','Ρ','Ꮲ','Ｐ','Ⲣ','ᴘ','Ᵽ'],
+    q:['ԛ','ｑ','զ','ɋ','Ɋ','ԛ'],
+    Q:['Ԛ','Ｑ','Ɋ','Ꝗ','Ⴓ','Ｑ'],
+    r:['г','ｒ','ɾ','ᴦ','ꭇ','ʀ','ⲅ'],
+    R:['Ʀ','Ꭱ','Ｒ','ʀ','Ɍ','Я','ᖇ'],
+    s:['ѕ','ｓ','ꜱ','ѕ','ꞩ','ʂ'],
+    S:['Ѕ','Ꮪ','Ｓ','ꜱ','Ѕ','Ꞩ'],
+    t:['т','ｔ','ƚ','ʈ','ϯ','†'],
+    T:['Т','Τ','Ꭲ','Ｔ','Ⲧ','⊤','Ƭ'],
+    u:['υ','ս','ｕ','ᴜ','ʋ','ꭒ','ᑌ'],
+    U:['Ս','Ｕ','ᴜ','Ʊ','Ⴎ','ᑌ'],
+    v:['ѵ','ν','ⅴ','ｖ','ᴠ','ʋ','ᐯ'],
+    V:['Ѵ','Ꮩ','Ⅴ','Ｖ','ᴠ','ᐯ','Ѵ'],
+    w:['ԝ','ѡ','ｗ','ᴡ','ա','ա'],
+    W:['Ԝ','Ꮃ','Ｗ','ᴡ','Ⱳ','Ꮤ'],
+    x:['х','×','ⅹ','ｘ','ᕁ','χ','ｘ'],
+    X:['Х','Χ','Ⅹ','Ｘ','᙭','Ⲭ','Ӽ'],
+    y:['у','γ','ү','ｙ','ʏ','ყ','ɣ'],
+    Y:['У','Υ','Ү','Ꭹ','Ｙ','ʏ','Ⲩ'],
+    z:['ᴢ','ｚ','ʐ','ꮓ','ƶ','ᶎ'],
+    Z:['Ζ','Ꮓ','Ｚ','ᴢ','Ƶ','Ⲍ','Ẕ']
   };
-  function homoglyphOnce(raw){
+
+  var ACCENT = {
+    a:['á','à','â','ã','ä','å','ā','ă','ą','ạ','ǎ','ȧ'],
+    A:['Á','À','Â','Ã','Ä','Å','Ā','Ă','Ą','Ạ','Ǎ'],
+    b:['ḃ','ḅ','ḇ','ƀ','ɓ'],
+    B:['Ḃ','Ḅ','Ḇ','Ƀ'],
+    c:['ć','ĉ','ċ','č','ç','ḉ'],
+    C:['Ć','Ĉ','Ċ','Č','Ç'],
+    d:['ď','ḋ','ḍ','ḑ','đ','ḏ'],
+    D:['Ď','Ḋ','Ḍ','Ḑ','Đ','Ḏ','Ð'],
+    e:['é','è','ê','ë','ē','ĕ','ė','ę','ě','ẹ','ẽ'],
+    E:['É','È','Ê','Ë','Ē','Ĕ','Ė','Ę','Ě','Ẹ','Ẽ'],
+    f:['ḟ','ƒ'],
+    F:['Ḟ','Ƒ'],
+    g:['ĝ','ğ','ġ','ģ','ǧ','ǵ','ḡ'],
+    G:['Ĝ','Ğ','Ġ','Ģ','Ǧ','Ǵ','Ḡ'],
+    h:['ĥ','ħ','ḣ','ḥ','ḧ','ḫ'],
+    H:['Ĥ','Ħ','Ḣ','Ḥ','Ḧ','Ḫ'],
+    i:['í','ì','î','ï','ĩ','ī','ĭ','į','ǐ','ị'],
+    I:['Í','Ì','Î','Ï','Ĩ','Ī','Ĭ','Į','Ǐ','Ị'],
+    j:['ĵ','ǰ'],
+    J:['Ĵ'],
+    k:['ķ','ḳ','ḵ','ǩ'],
+    K:['Ķ','Ḳ','Ḵ','Ǩ'],
+    l:['ĺ','ļ','ľ','ł','ḷ','ḻ'],
+    L:['Ĺ','Ļ','Ľ','Ł','Ḷ','Ḻ'],
+    m:['ḿ','ṁ','ṃ'],
+    M:['Ḿ','Ṁ','Ṃ'],
+    n:['ń','ñ','ņ','ň','ṅ','ṇ','ṉ'],
+    N:['Ń','Ñ','Ņ','Ň','Ṅ','Ṇ','Ṉ'],
+    o:['ó','ò','ô','õ','ö','ō','ŏ','ő','ø','ọ','ơ','ȯ'],
+    O:['Ó','Ò','Ô','Õ','Ö','Ō','Ŏ','Ő','Ø','Ọ','Ơ','Ȯ'],
+    p:['ṕ','ṗ','ƥ','þ'],
+    P:['Ṕ','Ṗ','Þ'],
+    q:['ɋ'],
+    Q:['Ɋ'],
+    r:['ŕ','ŗ','ř','ṙ','ṛ','ṟ'],
+    R:['Ŕ','Ŗ','Ř','Ṙ','Ṛ','Ṟ'],
+    s:['ś','ŝ','ş','š','ṡ','ṣ','ș'],
+    S:['Ś','Ŝ','Ş','Š','Ṡ','Ṣ','Ș'],
+    t:['ţ','ť','ṫ','ṭ','ṯ','ț'],
+    T:['Ţ','Ť','Ṫ','Ṭ','Ṯ','Ț'],
+    u:['ú','ù','û','ü','ũ','ū','ŭ','ů','ű','ụ','ư'],
+    U:['Ú','Ù','Û','Ü','Ũ','Ū','Ŭ','Ů','Ű','Ụ','Ư'],
+    v:['ṽ','ṿ'],
+    V:['Ṽ','Ṿ'],
+    w:['ŵ','ẁ','ẃ','ẅ','ẇ','ẉ'],
+    W:['Ŵ','Ẁ','Ẃ','Ẅ','Ẇ','Ẉ'],
+    x:['ẋ','ẍ'],
+    X:['Ẋ','Ẍ'],
+    y:['ý','ỳ','ŷ','ÿ','ỹ','ẏ','ỵ'],
+    Y:['Ý','Ỳ','Ŷ','Ÿ','Ỹ','Ẏ','Ỵ'],
+    z:['ź','ż','ž','ẑ','ẓ','ẕ'],
+    Z:['Ź','Ż','Ž','Ẑ','Ẓ','Ẕ']
+  };
+
+  var NUM = {
+    a:['@','4'], A:['4','@'],
+    b:['6','ß'], B:['8','13'],
+    e:['3','∈','€'], E:['3','€','Ξ'],
+    g:['9'], G:['6','9'],
+    i:['1','!','|'], I:['1','!','|'],
+    l:['1','|','ⅼ'], L:['£'],
+    o:['0','°','○'], O:['0','○','◯'],
+    q:['9'], Q:['9'],
+    s:['5','$','§'], S:['5','$','§'],
+    t:['7','+'], T:['7','+'],
+    x:['×','✕'], X:['×','✕'],
+    y:['¥'], Y:['¥'],
+    z:['2'], Z:['2'],
+    c:['¢','('], C:['¢','('],
+    d:[')'], D:['Ð'],
+    n:['η'], N:['И'],
+    r:['®'], R:['®'],
+    u:['µ'], U:['∪'],
+    v:['√'], V:['√'],
+    h:['#'], H:['#'],
+    p:['₱'], P:['₱'],
+    m:['₥'], M:['₼'],
+    f:['ƒ'], F:['ƒ'],
+    j:['ʲ'], J:['¿'],
+    k:['₭'], K:['₭'],
+    w:['ω'], W:['Ω']
+  };
+
+  var MULTI = {
+    m:['rn','ʀn','ɾn','nn'],
+    M:['IVI','ʌʌ','|Ⅴ|'],
+    w:['vv','ѵѵ','ʋʋ'],
+    W:['VV','ѴѴ','\\/\\/'],
+    d:['cl','ᴄl','ϲl'],
+    D:['|)','I)'],
+    b:['|3','Ib','lb'],
+    B:['|3','I3','8'],
+    n:['ri','rı','ʀi'],
+    N:['|\\|','I\\I'],
+    k:['lc','|c','Ic'],
+    K:['|<','I<'],
+    h:['lı','Iɪ','|ı'],
+    H:['|-|','I-I'],
+    u:['ʋ','µ','∪'],
+    U:['|_|','I_I'],
+    o:['()','()'],
+    O:['()','()'],
+    a:['ɑ','ɑ'],
+    g:['cj','ɡ'],
+    p:['ρ','þ'],
+    q:['ɋ','ᑫ'],
+    v:['\\/','ѵ'],
+    V:['\\/','Ѵ'],
+    y:['ʏ','ч'],
+    x:['><','×'],
+    X:['><','✕'],
+    t:['+','†'],
+    T:['⊤','7'],
+    l:['|','ⅼ'],
+    L:['|_','I_'],
+    e:['ҽ','ɛ'],
+    i:['ı','¡'],
+    f:['ſ','ƒ'],
+    z:['ƶ','2'],
+    r:['ɾ','ʀ'],
+    s:['ʂ','$'],
+    c:['ϲ','('],
+    j:['ʝ','ĵ']
+  };
+
+  /* ---------- Xây pool ứng viên ---------- */
+  function poolFor(ch, opts){
+    var pool = [];
+    if (BASE[ch]) pool = pool.concat(BASE[ch]);
+    if (opts.accent && ACCENT[ch]) pool = pool.concat(ACCENT[ch]);
+    if (opts.nums && NUM[ch]) pool = pool.concat(NUM[ch]);
+    if (opts.multi && MULTI[ch]) pool = pool.concat(MULTI[ch]);
+
+    // Chữ có dấu (kể cả tiếng Việt): dạng tách dấu trông giống hệt
+    if (String.prototype.normalize){
+      var nfd = ch.normalize('NFD');
+      if (nfd !== ch) pool.push(nfd);
+      var nfc = ch.normalize('NFC');
+      if (nfc !== ch) pool.push(nfc);
+    }
+
+    // loại trùng và loại chính nó
+    var seen = {}, out = [];
+    for (var i = 0; i < pool.length; i++){
+      var c = pool[i];
+      if (!c || c === ch || seen[c]) continue;
+      seen[c] = 1;
+      out.push(c);
+    }
+    return out;
+  }
+
+  function homoglyphOnce(raw, opts){
     var out = '';
     for (var i = 0; i < raw.length; i++){
       var ch = raw[i];
-      var cands = HOMO[ch];
-      if (!cands){ out += ch; continue; }
-      out += cands[Math.floor(Math.random() * cands.length)];
+      var pool = poolFor(ch, opts);
+      if (!pool.length || Math.random() * 100 > opts.intensity){ out += ch; continue; }
+      out += pool[Math.floor(Math.random() * pool.length)];
     }
     return out;
   }
 
+  /* ---------- DOM ---------- */
   var input = document.getElementById('text-input');
   var demoNote = document.getElementById('demo-note');
   var DEMO = 'Telegram';
 
+  var intensityEl = document.getElementById('intensity');
+  var intensityValueEl = document.getElementById('intensity-value');
+  var optNums = document.getElementById('opt-nums');
+  var optMulti = document.getElementById('opt-multi');
+  var optAccent = document.getElementById('opt-accent');
+  var variantCountEl = document.getElementById('variant-count');
+
+  var lookOutput = document.getElementById('look-output');
+  var lookCountEl = document.getElementById('look-count');
+  var lookRegenerateAllBtn = document.getElementById('look-regenerate-all');
+  var lookResults = [];
+
+  function currentOpts(){
+    return {
+      intensity: parseInt(intensityEl.value, 10),
+      nums: optNums.checked,
+      multi: optMulti.checked,
+      accent: optAccent.checked
+    };
+  }
+  function currentText(){
+    return input.value.trim() ? input.value : DEMO;
+  }
+  function variantCount(){
+    return parseInt(variantCountEl.value, 10) || 10;
+  }
 
   function fallbackCopy(text, cb){
     try{
@@ -509,37 +667,13 @@
       document.execCommand('copy');
       document.body.removeChild(ta);
       cb();
-    }catch(e){ /* ignore */ }
+    }catch(e){ /* bỏ qua */ }
   }
 
-  function syncDemoNote(){
-    demoNote.style.display = input.value.trim() ? 'none' : 'block';
-  }
-  input.addEventListener('input', syncDemoNote);
-
-  // ---------- Mix: combine a different style per character ----------
-  var MIXABLE_STYLES = STYLES.filter(function(s){ return s.mix !== false; });
-  var MIX_COUNT = 6;
-  var mixResults = [];
-  var mixOutput = document.getElementById('mix-output');
-  var mixCountEl = document.getElementById('mix-count');
-  var mixRegenerateAllBtn = document.getElementById('mix-regenerate-all');
-
-  function mixOnce(raw){
-    var out = '';
-    for (var i = 0; i < raw.length; i++){
-      var ch = raw[i];
-      if (ch === ' '){ out += ' '; continue; }
-      var style = MIXABLE_STYLES[Math.floor(Math.random() * MIXABLE_STYLES.length)];
-      try{ out += style.fn(ch); }catch(e){ out += ch; }
-    }
-    return out;
-  }
-
-  function makeCopyHandler(btn, text){
+  function copyWithFeedback(btn, text, suffix){
     btn.classList.add('copied');
     var original = text;
-    btn.textContent = text + '  ✓';
+    btn.textContent = text + (suffix || '  ✓');
     function reset(){
       setTimeout(function(){
         btn.classList.remove('copied');
@@ -553,61 +687,9 @@
     }
   }
 
-  function paintMix(){
-    mixOutput.innerHTML = '';
-    mixResults.forEach(function(text, idx){
-      var row = document.createElement('div');
-      row.className = 'mix-row';
-
-      var indexSpan = document.createElement('span');
-      indexSpan.className = 'mix-index';
-      indexSpan.textContent = (idx + 1) + '.';
-
-      var copyBtn = document.createElement('button');
-      copyBtn.type = 'button';
-      copyBtn.className = 'mix-copy';
-      copyBtn.textContent = text;
-      copyBtn.setAttribute('aria-label', 'Sao chép kiểu trộn số ' + (idx + 1) + ': ' + text);
-      copyBtn.addEventListener('click', function(){ makeCopyHandler(copyBtn, mixResults[idx]); });
-
-      var rerollBtn = document.createElement('button');
-      rerollBtn.type = 'button';
-      rerollBtn.className = 'mix-reroll';
-      rerollBtn.title = 'Đổi ngẫu nhiên dòng này';
-      rerollBtn.setAttribute('aria-label', 'Đổi ngẫu nhiên dòng ' + (idx + 1));
-      rerollBtn.textContent = '↻';
-      rerollBtn.addEventListener('click', function(){
-        var raw2 = input.value.trim() ? input.value : DEMO;
-        var newText = mixOnce(raw2);
-        mixResults[idx] = newText;
-        copyBtn.textContent = newText;
-        copyBtn.classList.remove('copied');
-        copyBtn.setAttribute('aria-label', 'Sao chép kiểu trộn số ' + (idx + 1) + ': ' + newText);
-      });
-
-      row.appendChild(indexSpan);
-      row.appendChild(copyBtn);
-      row.appendChild(rerollBtn);
-      mixOutput.appendChild(row);
-    });
-    mixCountEl.textContent = MIX_COUNT + ' biến thể';
+  function syncDemoNote(){
+    demoNote.style.display = input.value.trim() ? 'none' : 'block';
   }
-
-  function renderMix(){
-    var raw = input.value.trim() ? input.value : DEMO;
-    mixResults = [];
-    for (var i = 0; i < MIX_COUNT; i++) mixResults.push(mixOnce(raw));
-    paintMix();
-  }
-
-  mixRegenerateAllBtn.addEventListener('click', renderMix);
-
-  // ---------- Look-alike: swap each letter for a visually similar character ----------
-  var LOOK_COUNT = 6;
-  var lookResults = [];
-  var lookOutput = document.getElementById('look-output');
-  var lookCountEl = document.getElementById('look-count');
-  var lookRegenerateAllBtn = document.getElementById('look-regenerate-all');
 
   function paintLook(){
     lookOutput.innerHTML = '';
@@ -623,8 +705,8 @@
       copyBtn.type = 'button';
       copyBtn.className = 'mix-copy';
       copyBtn.textContent = text;
-      copyBtn.setAttribute('aria-label', 'Sao chép ký tự giống chữ số ' + (idx + 1) + ': ' + text);
-      copyBtn.addEventListener('click', function(){ makeCopyHandler(copyBtn, lookResults[idx]); });
+      copyBtn.setAttribute('aria-label', 'Sao chép biến thể ' + (idx + 1) + ': ' + text);
+      copyBtn.addEventListener('click', function(){ copyWithFeedback(copyBtn, lookResults[idx]); });
 
       var rerollBtn = document.createElement('button');
       rerollBtn.type = 'button';
@@ -633,12 +715,11 @@
       rerollBtn.setAttribute('aria-label', 'Đổi ngẫu nhiên dòng ' + (idx + 1));
       rerollBtn.textContent = '↻';
       rerollBtn.addEventListener('click', function(){
-        var raw2 = input.value.trim() ? input.value : DEMO;
-        var newText = homoglyphOnce(raw2);
+        var newText = homoglyphOnce(currentText(), currentOpts());
         lookResults[idx] = newText;
         copyBtn.textContent = newText;
         copyBtn.classList.remove('copied');
-        copyBtn.setAttribute('aria-label', 'Sao chép ký tự giống chữ số ' + (idx + 1) + ': ' + newText);
+        copyBtn.setAttribute('aria-label', 'Sao chép biến thể ' + (idx + 1) + ': ' + newText);
       });
 
       row.appendChild(indexSpan);
@@ -646,52 +727,98 @@
       row.appendChild(rerollBtn);
       lookOutput.appendChild(row);
     });
-    lookCountEl.textContent = LOOK_COUNT + ' biến thể';
+    lookCountEl.textContent = lookResults.length + ' biến thể';
   }
 
   function renderLook(){
-    var raw = input.value.trim() ? input.value : DEMO;
+    var raw = currentText();
+    var opts = currentOpts();
+    var n = variantCount();
     lookResults = [];
-    for (var i = 0; i < LOOK_COUNT; i++) lookResults.push(homoglyphOnce(raw));
+    var seen = {};
+    for (var i = 0; i < n; i++){
+      var text = '', tries = 0;
+      do {
+        text = homoglyphOnce(raw, opts);
+        tries++;
+      } while (seen[text] && tries < 12);
+      seen[text] = 1;
+      lookResults.push(text);
+    }
     paintLook();
   }
 
   lookRegenerateAllBtn.addEventListener('click', renderLook);
-
-  input.addEventListener('input', function(){
-    renderMix();
+  input.addEventListener('input', function(){ syncDemoNote(); renderLook(); });
+  intensityEl.addEventListener('input', function(){
+    intensityValueEl.textContent = intensityEl.value + '%';
     renderLook();
   });
+  [optNums, optMulti, optAccent, variantCountEl].forEach(function(el){
+    el.addEventListener('change', renderLook);
+  });
 
-  // Hero rotating demo
+  /* ---------- Bảng tra ---------- */
+  function buildTable(){
+    var body = document.getElementById('glyph-table-body');
+    var letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    var frag = document.createDocumentFragment();
+    letters.forEach(function(lo){
+      [lo, lo.toUpperCase()].forEach(function(ch){
+        var pool = poolFor(ch, {nums:true, multi:true, accent:true});
+        if (!pool.length) return;
+        var tr = document.createElement('tr');
+        var td1 = document.createElement('td');
+        td1.className = 'src';
+        td1.textContent = ch;
+        var td2 = document.createElement('td');
+        pool.forEach(function(g){
+          var chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'glyph-chip';
+          chip.textContent = g;
+          chip.setAttribute('aria-label', 'Chép ký tự ' + g);
+          chip.addEventListener('click', function(){ copyWithFeedback(chip, g, ''); });
+          td2.appendChild(chip);
+        });
+        tr.appendChild(td1); tr.appendChild(td2);
+        frag.appendChild(tr);
+      });
+    });
+    body.appendChild(frag);
+  }
+
+  /* ---------- Hero ---------- */
   var heroPreview = document.getElementById('hero-preview');
-  var HERO_STYLES = [bold, script, fraktur, doubleStruck, sansBoldItalic, flipText, homoglyphOnce];
-  var heroIndex = 0;
   var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  heroPreview.textContent = HERO_STYLES[0](DEMO);
-  heroIndex = 1;
+  var HERO_OPTS = [
+    {intensity:100, nums:false, multi:false, accent:false},
+    {intensity:100, nums:true,  multi:false, accent:true},
+    {intensity:70,  nums:true,  multi:true,  accent:false},
+    {intensity:100, nums:false, multi:false, accent:true}
+  ];
+  var heroIndex = 0;
+  heroPreview.textContent = homoglyphOnce(DEMO, HERO_OPTS[0]);
 
   var heroTimer = null;
   function cycleHero(){
     heroPreview.style.opacity = 0;
     setTimeout(function(){
-      heroPreview.textContent = HERO_STYLES[heroIndex](DEMO);
-      heroIndex = (heroIndex + 1) % HERO_STYLES.length;
+      heroIndex = (heroIndex + 1) % HERO_OPTS.length;
+      heroPreview.textContent = homoglyphOnce(DEMO, HERO_OPTS[heroIndex]);
       heroPreview.style.opacity = 1;
     }, 200);
   }
-  if (!prefersReduced){
-    heroTimer = setInterval(cycleHero, 1900);
-  }
+  if (!prefersReduced) heroTimer = setInterval(cycleHero, 1900);
   input.addEventListener('input', function stopHero(){
     if (heroTimer){ clearInterval(heroTimer); heroTimer = null; }
     input.removeEventListener('input', stopHero);
   });
 
+  intensityValueEl.textContent = intensityEl.value + '%';
   syncDemoNote();
-  renderMix();
   renderLook();
+  buildTable();
 })();
 </script>
 </body>
