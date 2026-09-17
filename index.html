@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Đổi kiểu chữ Facebook — dán thẳng vào status, bio, bình luận</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Gõ một câu, mỗi chữ cái một kiểu Unicode khác nhau, ghép lại thành chuỗi độc lạ để dán vào status, tin nhắn hay tiểu sử Facebook.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAFAF8;
+    --ink:#15171C;
+    --ink-soft:#5B5F6A;
+    --line: rgba(21,23,28,.12);
+    --line-strong: rgba(21,23,28,.24);
+    --accent:#4A2FEA;
+    --accent-ink:#FFFFFF;
+    --row-hover: rgba(74,47,234,.06);
+    --font-display:'Be Vietnam Pro', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#131319;
+      --ink:#F1F0EC;
+      --ink-soft:#A8ACB8;
+      --line: rgba(255,255,255,.14);
+      --line-strong: rgba(255,255,255,.26);
+      --accent:#8577FF;
+      --accent-ink:#131319;
+      --row-hover: rgba(133,119,255,.12);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#131319;
+    --ink:#F1F0EC;
+    --ink-soft:#A8ACB8;
+    --line: rgba(255,255,255,.14);
+    --line-strong: rgba(255,255,255,.26);
+    --accent:#8577FF;
+    --accent-ink:#131319;
+    --row-hover: rgba(133,119,255,.12);
+  }
+  *{ box-sizing:border-box; }
+  html{ background:var(--paper); }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-display);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  .page{ max-width:840px; margin:0 auto; padding:0 1.25rem 2rem; }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding: clamp(2.5rem,7vw,4.5rem) 0 1rem; }
+  .hero h1{
+    font-family:var(--font-display);
+    font-weight:800;
+    font-style:italic;
+    font-size:clamp(2rem,6vw,3.4rem);
+    line-height:1.06;
+    letter-spacing:-0.01em;
+    margin:0 0 1.1rem;
+    max-width:15ch;
+  }
+  .hero .lede{
+    font-size:clamp(1rem,2.1vw,1.15rem);
+    color:var(--ink-soft);
+    max-width:54ch;
+    margin:0 0 2.25rem;
+    line-height:1.6;
+  }
+  .hero-demo{
+    display:flex;
+    align-items:baseline;
+    gap:0.7rem;
+    flex-wrap:wrap;
+    margin-bottom:2.5rem;
+    padding-bottom:1.75rem;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-demo-label{
+    font-family:var(--font-mono);
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  #hero-preview{
+    font-size:clamp(1.5rem,4.2vw,2.3rem);
+    font-weight:600;
+    color:var(--accent);
+    min-height:1.3em;
+    transition:opacity .22s ease;
+  }
+
+  /* ---------- Input ---------- */
+  label.field-label{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    margin-bottom:0.6rem;
+  }
+  #text-input{
+    width:100%;
+    font-family:var(--font-display);
+    font-size:clamp(1.3rem,4vw,2rem);
+    font-weight:600;
+    background:transparent;
+    border:none;
+    border-bottom:2px solid var(--line-strong);
+    padding:0.3rem 0.1rem 0.65rem;
+    color:var(--ink);
+    outline:none;
+  }
+  #text-input:focus{ border-bottom-color:var(--accent); }
+  #text-input::placeholder{ color:var(--ink-soft); opacity:.55; font-weight:400; }
+
+  .note{
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    margin:0.85rem 0 0;
+    max-width:62ch;
+    line-height:1.55;
+  }
+  #demo-note{ color:var(--accent); }
+
+  /* ---------- Mix section ---------- */
+  .mix-section{
+    margin:2.5rem 0 0;
+    padding:1.6rem 1.5rem;
+    border:1px solid var(--line-strong);
+    border-radius:10px;
+    background:var(--row-hover);
+  }
+  .mix-section h2{
+    font-family:var(--font-display);
+    font-weight:800;
+    font-style:italic;
+    font-size:clamp(1.25rem,3vw,1.6rem);
+    margin:0 0 0.5rem;
+  }
+  .mix-section > p{
+    font-size:0.92rem;
+    color:var(--ink-soft);
+    max-width:58ch;
+    line-height:1.55;
+    margin:0 0 1.35rem;
+  }
+  .count{ font-family:var(--font-mono); font-size:0.78rem; color:var(--ink-soft); white-space:nowrap; }
+  .mix-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:1rem;
+    flex-wrap:wrap;
+    margin-bottom:0.75rem;
+  }
+  .ghost-btn{
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    background:transparent;
+    border:1px solid var(--line-strong);
+    border-radius:5px;
+    padding:0.45rem 0.9rem;
+    color:var(--ink);
+    cursor:pointer;
+    transition:background .15s, border-color .15s, color .15s;
+  }
+  .ghost-btn:hover{ border-color:var(--accent); color:var(--accent); }
+  .ghost-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  .mix-row{
+    display:flex;
+    align-items:center;
+    gap:0.6rem;
+    padding:0.4rem 0;
+    border-bottom:1px solid var(--line);
+  }
+  .mix-row:last-child{ border-bottom:none; }
+  .mix-index{
+    flex:0 0 24px;
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    color:var(--ink-soft);
+  }
+  .mix-copy{
+    flex:1 1 auto;
+    text-align:left;
+    background:none;
+    border:none;
+    font-family:var(--font-display);
+    font-size:1.2rem;
+    font-weight:600;
+    color:var(--ink);
+    padding:0.4rem 0.55rem;
+    border-radius:6px;
+    cursor:pointer;
+    word-break:break-word;
+    transition:background .15s;
+  }
+  .mix-copy:hover{ background:rgba(128,128,128,.12); }
+  .mix-copy.copied{ background:var(--accent); color:var(--accent-ink); }
+  .mix-copy:focus-visible{ outline:2px solid var(--accent); outline-offset:-2px; }
+
+  .mix-reroll{
+    flex:0 0 auto;
+    background:none;
+    border:1px solid var(--line-strong);
+    border-radius:6px;
+    width:2.2rem;
+    height:2.2rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1rem;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:border-color .15s, color .15s, transform .15s;
+  }
+  .mix-reroll:hover{ border-color:var(--accent); color:var(--accent); }
+  .mix-reroll:active{ transform:rotate(60deg); }
+  .mix-reroll:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  /* ---------- Footer ---------- */
+  .site-footer{
+    margin-top:3.5rem;
+    padding:2rem 0 1rem;
+    border-top:1px solid var(--line);
+    font-size:0.82rem;
+    color:var(--ink-soft);
+    line-height:1.65;
+    max-width:70ch;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition-duration:0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <h1>Chữ thường, đăng lên hơi chán.</h1>
+    <p class="lede">Gõ một câu bất kỳ, mỗi chữ cái sẽ được bốc ngẫu nhiên từ hơn hai mươi bộ ký tự Unicode rồi ghép lại — dán thẳng vào status, tin nhắn hay tiểu sử Facebook, không cần cài thêm gì.</p>
+
+    <div class="hero-demo">
+      <span class="hero-demo-label">Ví dụ, chữ "Facebook":</span>
+      <span id="hero-preview" aria-live="polite"></span>
+    </div>
+
+    <label class="field-label" for="text-input">Văn bản của bạn</label>
+    <input id="text-input" type="text" autocomplete="off" spellcheck="false" placeholder="Gõ gì đó đi…" maxlength="300">
+    <p class="note" id="demo-note">Đang xem trước bằng chữ "Facebook" — gõ nội dung của bạn ở trên để thay thế.</p>
+    <p class="note">Dấu tiếng Việt (ă, â, ê, ô, ơ, ư, đ và các thanh điệu) sẽ giữ nguyên ở một số kiểu chữ đặc biệt, do giới hạn của bảng mã Unicode.</p>
+  </header>
+
+  <section class="mix-section">
+    <h2>Trộn kiểu chữ</h2>
+    <p>Mỗi chữ cái trong từ được bốc ngẫu nhiên từ một kiểu khác nhau rồi ghép lại — ví dụ "Facebook" có thể ra F đậm, a chữ thảo, c Gothic... Nhấn vào một dòng để chép, hoặc bấm nút xoay để đổi riêng dòng đó.</p>
+    <div class="mix-toolbar">
+      <button type="button" class="ghost-btn" id="mix-regenerate-all">Tạo lại tất cả</button>
+      <span class="count" id="mix-count"></span>
+    </div>
+    <div id="mix-output"></div>
+  </section>
+
+
+  <footer class="site-footer">
+    Đây không phải các font chữ thật, mà là những bộ ký tự Unicode riêng biệt cho từng kiểu — vì vậy dán được ở hầu hết mọi nơi cho phép nhập văn bản, kể cả ngoài Facebook. Một vài kiểu chỉ hỗ trợ chữ cái và số cơ bản; trình đọc màn hình cũng có thể đọc các ký tự này khác với chữ thường.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var A = 65, Zc = 90, a = 97, z = 122, d0 = 48, d9 = 57;
+
+  function mathAlpha(str, upperStart, lowerStart, digitStart, holes){
+    holes = holes || {};
+    var out = '';
+    for (var i = 0; i < str.length; i++){
+      var ch = str[i];
+      if (holes[ch] !== undefined){ out += holes[ch]; continue; }
+      var code = ch.charCodeAt(0);
+      if (upperStart != null && code >= A && code <= Zc) out += String.fromCodePoint(upperStart + (code - A));
+      else if (lowerStart != null && code >= a && code <= z) out += String.fromCodePoint(lowerStart + (code - a));
+      else if (digitStart != null && code >= d0 && code <= d9) out += String.fromCodePoint(digitStart + (code - d0));
+      else out += ch;
+    }
+    return out;
+  }
+
+  var H_ITALIC = { h: '\u210E' };
+  var H_SCRIPT = { B:'\u212C', E:'\u2130', F:'\u2131', H:'\u210B', I:'\u2110', L:'\u2112', M:'\u2133', R:'\u211B', e:'\u212F', g:'\u210A', o:'\u2134' };
+  var H_FRAKTUR = { C:'\u212D', H:'\u210C', I:'\u2111', R:'\u211C', Z:'\u2128' };
+  var H_DSTRUCK = { C:'\u2102', H:'\u210D', N:'\u2115', P:'\u2119', Q:'\u211A', R:'\u211D', Z:'\u2124' };
+
+  var bold           = function(s){ return mathAlpha(s, 0x1D400, 0x1D41A, 0x1D7CE); };
+  var italic         = function(s){ return mathAlpha(s, 0x1D434, 0x1D44E, null, H_ITALIC); };
+  var boldItalic     = function(s){ return mathAlpha(s, 0x1D468, 0x1D482, null); };
+  var script         = function(s){ return mathAlpha(s, 0x1D49C, 0x1D4B6, null, H_SCRIPT); };
+  var boldScript      = function(s){ return mathAlpha(s, 0x1D4D0, 0x1D4EA, null); };
+  var fraktur         = function(s){ return mathAlpha(s, 0x1D504, 0x1D51E, null, H_FRAKTUR); };
+  var boldFraktur     = function(s){ return mathAlpha(s, 0x1D56C, 0x1D586, null); };
+  var doubleStruck     = function(s){ return mathAlpha(s, 0x1D538, 0x1D552, 0x1D7D8, H_DSTRUCK); };
+  var sans             = function(s){ return mathAlpha(s, 0x1D5A0, 0x1D5BA, 0x1D7E2); };
+  var sansBold         = function(s){ return mathAlpha(s, 0x1D5D4, 0x1D5EE, 0x1D7EC); };
+  var sansItalic       = function(s){ return mathAlpha(s, 0x1D608, 0x1D622, null); };
+  var sansBoldItalic   = function(s){ return mathAlpha(s, 0x1D63C, 0x1D656, null); };
+  var monospace        = function(s){ return mathAlpha(s, 0x1D670, 0x1D68A, 0x1D7F6); };
+
+  function fullwidth(str){
+    var out = '';
+    for (var i = 0; i < str.length; i++){
+      var ch = str[i], code = ch.charCodeAt(0);
+      if (ch === ' ') out += '\u3000';
+      else if (code >= A && code <= Zc) out += String.fromCodePoint(0xFF21 + (code - A));
+      else if (code >= a && code <= z) out += String.fromCodePoint(0xFF41 + (code - a));
+      else if (code >= d0 && code <= d9) out += String.fromCodePoint(0xFF10 + (code - d0));
+      else out += ch;
+    }
+    return out;
+  }
+
+  var CIRCLE_DIGIT = {'0':'\u24EA','1':'\u2460','2':'\u2461','3':'\u2462','4':'\u2463','5':'\u2464','6':'\u2465','7':'\u2466','8':'\u2467','9':'\u2468'};
+  function circled(str){
+    var out = '';
+    for (var i = 0; i < str.length; i++){
+      var ch = str[i], code = ch.charCodeAt(0);
+      if (CIRCLE_DIGIT[ch]) out += CIRCLE_DIGIT[ch];
+      else if (code >= A && code <= Zc) out += String.fromCodePoint(0x24B6 + (code - A));
+      else if (code >= a && code <= z) out += String.fromCodePoint(0x24D0 + (code - a));
+      else out += ch;
+    }
+    return out;
+  }
+
+  function squared(str){
+    var out = '', up = str.toUpperCase();
+    for (var i = 0; i < up.length; i++){
+      var ch = up[i], code = ch.charCodeAt(0);
+      out += (code >= A && code <= Zc) ? String.fromCodePoint(0x1F130 + (code - A)) : ch;
+    }
+    return out;
+  }
+
+  function parenthesized(str){
+    var out = '', low = str.toLowerCase();
+    for (var i = 0; i < low.length; i++){
+      var ch = low[i], code = ch.charCodeAt(0);
+      out += (code >= a && code <= z) ? String.fromCodePoint(0x249C + (code - a)) : ch;
+    }
+    return out;
+  }
+
+  var SMALLCAPS = { a:'\u1D00', b:'\u0299', c:'\u1D04', d:'\u1D05', e:'\u1D07', f:'\uA730', g:'\u0262', h:'\u029C', i:'\u026A', j:'\u1D0A', k:'\u1D0B', l:'\u029F', m:'\u1D0D', n:'\u0274', o:'\u1D0F', p:'\u1D18', r:'\u0280', t:'\u1D1B', u:'\u1D1C', v:'\u1D20', w:'\u1D21', y:'\u028F', z:'\u1D22' };
+  function smallCaps(str){
+    var out = '';
+    for (var i = 0; i < str.length; i++){
+      var lo = str[i].toLowerCase();
+      out += SMALLCAPS[lo] || str[i];
+    }
+    return out;
+  }
+
+  var SUP = { a:'\u1D43', b:'\u1D47', c:'\u1D9C', d:'\u1D48', e:'\u1D49', f:'\u1DA0', g:'\u1D4D', h:'\u02B0', i:'\u2071', j:'\u02B2', k:'\u1D4F', l:'\u02E1', m:'\u1D50', n:'\u207F', o:'\u1D52', p:'\u1D56', r:'\u02B3', s:'\u02E2', t:'\u1D57', u:'\u1D58', v:'\u1D5B', w:'\u02B7', x:'\u02E3', y:'\u02B8', z:'\u1DBB',
+    A:'\u1D2C', B:'\u1D2E', D:'\u1D30', E:'\u1D31', G:'\u1D33', H:'\u1D34', I:'\u1D35', J:'\u1D36', K:'\u1D37', L:'\u1D38', M:'\u1D39', N:'\u1D3A', O:'\u1D3C', P:'\u1D3E', R:'\u1D3F', T:'\u1D40', U:'\u1D41', V:'\u2C7D', W:'\u1D42',
+    '0':'\u2070','1':'\u00B9','2':'\u00B2','3':'\u00B3','4':'\u2074','5':'\u2075','6':'\u2076','7':'\u2077','8':'\u2078','9':'\u2079','+':'\u207A','-':'\u207B','=':'\u207C','(':'\u207D',')':'\u207E' };
+  function superscript(str){
+    var out = '';
+    for (var i = 0; i < str.length; i++) out += SUP[str[i]] || str[i];
+    return out;
+  }
+
+  var SUB = { a:'\u2090', e:'\u2091', h:'\u2095', i:'\u1D62', j:'\u2C7C', k:'\u2096', l:'\u2097', m:'\u2098', n:'\u2099', o:'\u2092', p:'\u209A', r:'\u1D63', s:'\u209B', t:'\u209C', u:'\u1D64', v:'\u1D65', x:'\u2093',
+    '0':'\u2080','1':'\u2081','2':'\u2082','3':'\u2083','4':'\u2084','5':'\u2085','6':'\u2086','7':'\u2087','8':'\u2088','9':'\u2089','+':'\u208A','-':'\u208B','=':'\u208C','(':'\u208D',')':'\u208E' };
+  function subscript(str){
+    var out = '';
+    for (var i = 0; i < str.length; i++){
+      var ch = str[i], lo = ch.toLowerCase();
+      out += SUB[lo] !== undefined ? SUB[lo] : (SUB[ch] !== undefined ? SUB[ch] : ch);
+    }
+    return out;
+  }
+
+  function decorate(str, mark){
+    var out = '';
+    for (var i = 0; i < str.length; i++) out += str[i] + mark;
+    return out;
+  }
+  var strikethrough = function(s){ return decorate(s, '\u0336'); };
+  var underline      = function(s){ return decorate(s, '\u0332'); };
+  var dotted          = function(s){ return decorate(s, '\u0307'); };
+  var wavyUnderline    = function(s){ return decorate(s, '\u0330'); };
+
+  var FLIP = { a:'ɐ', b:'q', c:'ɔ', d:'p', e:'ǝ', f:'ɟ', g:'ƃ', h:'ɥ', i:'ᴉ', j:'ɾ', k:'ʞ', l:'l', m:'ɯ', n:'u', o:'o', p:'d', q:'b', r:'ɹ', s:'s', t:'ʇ', u:'n', v:'ʌ', w:'ʍ', x:'x', y:'ʎ', z:'z',
+    A:'∀', B:'𐐒', C:'Ɔ', D:'ᗡ', E:'Ǝ', F:'Ⅎ', G:'⅁', H:'H', I:'I', J:'ſ', K:'Ʞ', L:'˥', M:'W', N:'N', O:'O', P:'Ԁ', Q:'Ό', R:'ᴚ', S:'S', T:'⊥', U:'∩', V:'Λ', W:'M', X:'X', Y:'⅄', Z:'Z',
+    '0':'0','1':'Ɩ','2':'ᄅ','3':'Ɛ','4':'ㄣ','5':'ϛ','6':'9','7':'ㄥ','8':'8','9':'6',
+    '.':'˙',',':"'","'":',','"':',,','?':'¿','!':'¡','[':']',']':'[','(':')',')':'(','{':'}','}':'{','<':'>','>':'<','&':'⅋','_':'‾' };
+  function flipText(str){
+    var arr = [];
+    for (var i = 0; i < str.length; i++){ var ch = str[i]; arr.push(FLIP[ch] !== undefined ? FLIP[ch] : ch); }
+    return arr.reverse().join('');
+  }
+
+  function reversed(str){ return str.split('').reverse().join(''); }
+  function spaced(str){ return str.split('').join(' '); }
+
+  var STYLES = [
+    {group:'Đậm & nghiêng', name:'Đậm', tag:'bold', fn:bold},
+    {group:'Đậm & nghiêng', name:'Nghiêng', tag:'italic', fn:italic},
+    {group:'Đậm & nghiêng', name:'Đậm nghiêng', tag:'bold italic', fn:boldItalic},
+    {group:'Nét thảo & cổ điển', name:'Chữ thảo', tag:'script', fn:script},
+    {group:'Nét thảo & cổ điển', name:'Chữ thảo đậm', tag:'bold script', fn:boldScript},
+    {group:'Nét thảo & cổ điển', name:'Gothic', tag:'fraktur', fn:fraktur},
+    {group:'Nét thảo & cổ điển', name:'Gothic đậm', tag:'bold fraktur', fn:boldFraktur},
+    {group:'Nét thảo & cổ điển', name:'Viền rỗng', tag:'double-struck', fn:doubleStruck},
+    {group:'Không chân & đánh máy', name:'Không chân', tag:'sans-serif', fn:sans},
+    {group:'Không chân & đánh máy', name:'Không chân đậm', tag:'sans bold', fn:sansBold},
+    {group:'Không chân & đánh máy', name:'Không chân nghiêng', tag:'sans italic', fn:sansItalic},
+    {group:'Không chân & đánh máy', name:'Không chân đậm nghiêng', tag:'sans bold italic', fn:sansBoldItalic},
+    {group:'Không chân & đánh máy', name:'Đánh máy', tag:'monospace', fn:monospace},
+    {group:'Ký tự đặc biệt', name:'Toàn chiều rộng', tag:'fullwidth', fn:fullwidth},
+    {group:'Ký tự đặc biệt', name:'Chữ hoa nhỏ', tag:'small caps', fn:smallCaps},
+    {group:'Ký tự đặc biệt', name:'Khoanh tròn', tag:'circled', fn:circled},
+    {group:'Ký tự đặc biệt', name:'Ô vuông', tag:'squared', fn:squared},
+    {group:'Ký tự đặc biệt', name:'Trong ngoặc đơn', tag:'parenthesized', fn:parenthesized},
+    {group:'Ký tự đặc biệt', name:'Chỉ số trên', tag:'superscript', fn:superscript},
+    {group:'Ký tự đặc biệt', name:'Chỉ số dưới', tag:'subscript', fn:subscript},
+    {group:'Hiệu ứng', name:'Gạch ngang', tag:'strikethrough', fn:strikethrough},
+    {group:'Hiệu ứng', name:'Gạch chân', tag:'underline', fn:underline},
+    {group:'Hiệu ứng', name:'Chấm trên đầu', tag:'dotted', fn:dotted},
+    {group:'Hiệu ứng', name:'Gạch sóng', tag:'wavy', fn:wavyUnderline},
+    {group:'Hiệu ứng', name:'Lộn ngược', tag:'flip', fn:flipText, mix:false},
+    {group:'Hiệu ứng', name:'Đảo ngược', tag:'reverse', fn:reversed, mix:false},
+    {group:'Hiệu ứng', name:'Cách đều chữ', tag:'spaced', fn:spaced, mix:false}
+  ];
+
+  var input = document.getElementById('text-input');
+  var demoNote = document.getElementById('demo-note');
+  var DEMO = 'Facebook';
+
+
+  function fallbackCopy(text, cb){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      cb();
+    }catch(e){ /* ignore */ }
+  }
+
+  function syncDemoNote(){
+    demoNote.style.display = input.value.trim() ? 'none' : 'block';
+  }
+  input.addEventListener('input', syncDemoNote);
+
+  // ---------- Mix: combine a different style per character ----------
+  var MIXABLE_STYLES = STYLES.filter(function(s){ return s.mix !== false; });
+  var MIX_COUNT = 6;
+  var mixResults = [];
+  var mixOutput = document.getElementById('mix-output');
+  var mixCountEl = document.getElementById('mix-count');
+  var mixRegenerateAllBtn = document.getElementById('mix-regenerate-all');
+
+  function mixOnce(raw){
+    var out = '';
+    for (var i = 0; i < raw.length; i++){
+      var ch = raw[i];
+      if (ch === ' '){ out += ' '; continue; }
+      var style = MIXABLE_STYLES[Math.floor(Math.random() * MIXABLE_STYLES.length)];
+      try{ out += style.fn(ch); }catch(e){ out += ch; }
+    }
+    return out;
+  }
+
+  function copyMixText(btn, text){
+    btn.classList.add('copied');
+    var original = text;
+    btn.textContent = text + '  ✓';
+    function reset(){
+      setTimeout(function(){
+        btn.classList.remove('copied');
+        btn.textContent = original;
+      }, 1300);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(reset)['catch'](function(){ fallbackCopy(text, reset); });
+    } else {
+      fallbackCopy(text, reset);
+    }
+  }
+
+  function paintMix(){
+    mixOutput.innerHTML = '';
+    mixResults.forEach(function(text, idx){
+      var row = document.createElement('div');
+      row.className = 'mix-row';
+
+      var indexSpan = document.createElement('span');
+      indexSpan.className = 'mix-index';
+      indexSpan.textContent = (idx + 1) + '.';
+
+      var copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'mix-copy';
+      copyBtn.textContent = text;
+      copyBtn.setAttribute('aria-label', 'Sao chép kiểu trộn số ' + (idx + 1) + ': ' + text);
+      copyBtn.addEventListener('click', function(){ copyMixText(copyBtn, mixResults[idx]); });
+
+      var rerollBtn = document.createElement('button');
+      rerollBtn.type = 'button';
+      rerollBtn.className = 'mix-reroll';
+      rerollBtn.title = 'Đổi ngẫu nhiên dòng này';
+      rerollBtn.setAttribute('aria-label', 'Đổi ngẫu nhiên dòng ' + (idx + 1));
+      rerollBtn.textContent = '↻';
+      rerollBtn.addEventListener('click', function(){
+        var raw2 = input.value.trim() ? input.value : DEMO;
+        var newText = mixOnce(raw2);
+        mixResults[idx] = newText;
+        copyBtn.textContent = newText;
+        copyBtn.classList.remove('copied');
+        copyBtn.setAttribute('aria-label', 'Sao chép kiểu trộn số ' + (idx + 1) + ': ' + newText);
+      });
+
+      row.appendChild(indexSpan);
+      row.appendChild(copyBtn);
+      row.appendChild(rerollBtn);
+      mixOutput.appendChild(row);
+    });
+    mixCountEl.textContent = MIX_COUNT + ' biến thể';
+  }
+
+  function renderMix(){
+    var raw = input.value.trim() ? input.value : DEMO;
+    mixResults = [];
+    for (var i = 0; i < MIX_COUNT; i++) mixResults.push(mixOnce(raw));
+    paintMix();
+  }
+
+  mixRegenerateAllBtn.addEventListener('click', renderMix);
+  input.addEventListener('input', renderMix);
+
+  // Hero rotating demo
+  var heroPreview = document.getElementById('hero-preview');
+  var HERO_STYLES = [bold, script, fraktur, doubleStruck, sansBoldItalic, flipText];
+  var heroIndex = 0;
+  var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  heroPreview.textContent = HERO_STYLES[0](DEMO);
+  heroIndex = 1;
+
+  var heroTimer = null;
+  function cycleHero(){
+    heroPreview.style.opacity = 0;
+    setTimeout(function(){
+      heroPreview.textContent = HERO_STYLES[heroIndex](DEMO);
+      heroIndex = (heroIndex + 1) % HERO_STYLES.length;
+      heroPreview.style.opacity = 1;
+    }, 200);
+  }
+  if (!prefersReduced){
+    heroTimer = setInterval(cycleHero, 1900);
+  }
+  input.addEventListener('input', function stopHero(){
+    if (heroTimer){ clearInterval(heroTimer); heroTimer = null; }
+    input.removeEventListener('input', stopHero);
+  });
+
+  syncDemoNote();
+  renderMix();
+})();
+</script>
+</body>
+</html>
