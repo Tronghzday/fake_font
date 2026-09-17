@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Đổi kiểu chữ Facebook — dán thẳng vào status, bio, bình luận</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Gõ một câu, mỗi chữ cái một kiểu Unicode khác nhau, ghép lại thành chuỗi độc lạ để dán vào status, tin nhắn hay tiểu sử Facebook.">
+<meta name="description" content="Gõ một câu, mỗi chữ cái một kiểu Unicode khác nhau hoặc một ký tự giống chữ, ghép lại thành chuỗi độc lạ để dán vào status, tin nhắn hay tiểu sử Facebook.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -129,7 +129,7 @@
   }
   #demo-note{ color:var(--accent); }
 
-  /* ---------- Mix section ---------- */
+  /* ---------- Mix sections (shared style) ---------- */
   .mix-section{
     margin:2.5rem 0 0;
     padding:1.6rem 1.5rem;
@@ -247,7 +247,7 @@
 
   <header class="hero">
     <h1>Chữ thường, đăng lên hơi chán.</h1>
-    <p class="lede">Gõ một câu bất kỳ, mỗi chữ cái sẽ được bốc ngẫu nhiên từ hơn hai mươi bộ ký tự Unicode rồi ghép lại — dán thẳng vào status, tin nhắn hay tiểu sử Facebook, không cần cài thêm gì.</p>
+    <p class="lede">Gõ một câu bất kỳ: đổi thành nhiều kiểu chữ Unicode khác nhau, trộn ngẫu nhiên nhiều kiểu trong cùng một từ, hoặc thay từng chữ bằng một ký tự khác trông giống hệt nó — dán thẳng vào status, tin nhắn hay tiểu sử Facebook, không cần cài thêm gì.</p>
 
     <div class="hero-demo">
       <span class="hero-demo-label">Ví dụ, chữ "Telegram":</span>
@@ -270,6 +270,15 @@
     <div id="mix-output"></div>
   </section>
 
+  <section class="mix-section">
+    <h2>Trộn ký tự giống chữ</h2>
+    <p>Mỗi chữ cái được thay bằng một ký tự Unicode khác nhưng có hình dáng giống nó — ví dụ chữ "T" có thể ra chữ Т tiếng Nga, chữ "l" ra số "1" hoặc chữ "I", chữ "e" ra ký hiệu "∈"... chứ không phải cùng một chữ T đổi sang kiểu font khác. Nhấn vào một dòng để chép, hoặc bấm nút xoay để đổi riêng dòng đó.</p>
+    <div class="mix-toolbar">
+      <button type="button" class="ghost-btn" id="look-regenerate-all">Tạo lại tất cả</button>
+      <span class="count" id="look-count"></span>
+    </div>
+    <div id="look-output"></div>
+  </section>
 
   <footer class="site-footer">
     Đây không phải các font chữ thật, mà là những bộ ký tự Unicode riêng biệt cho từng kiểu — vì vậy dán được ở hầu hết mọi nơi cho phép nhập văn bản, kể cả ngoài Facebook. Một vài kiểu chỉ hỗ trợ chữ cái và số cơ bản; trình đọc màn hình cũng có thể đọc các ký tự này khác với chữ thường.
@@ -444,6 +453,46 @@
     {group:'Hiệu ứng', name:'Cách đều chữ', tag:'spaced', fn:spaced, mix:false}
   ];
 
+  // ---------- Look-alike homoglyph map: each letter -> visually similar Unicode candidates ----------
+  var HOMO = {
+    a:['а','ạ','ą','α'], A:['А','Α','Ā'],
+    b:['Ь','ß','β'], B:['В','Β','8'],
+    c:['с','ϲ','ç'], C:['С','Ϲ','Ç'],
+    d:['ԁ','đ','ð'], D:['Ď','Ð'],
+    e:['е','∈','3','ë'], E:['Е','Ε','3'],
+    f:['ƒ'], F:['Ϝ'],
+    g:['ɡ','ǥ','9'], G:['Ԍ'],
+    h:['һ','н','ħ'], H:['Н','Η'],
+    i:['і','1','l','ι'], I:['І','1','l','Ι'],
+    j:['ј','ʝ'], J:['Ј'],
+    k:['κ','к'], K:['К','Κ'],
+    l:['1','I','ł','ℓ'], L:['ᒪ','Ⅼ'],
+    m:['м','rn'], M:['М','Μ'],
+    n:['ո','η','ñ'], N:['Ν','Ⲛ'],
+    o:['о','0','ο','ø'], O:['О','0','Ο'],
+    p:['р','ρ','þ'], P:['Р','Ρ'],
+    q:['ԛ','9'], Q:['Ԛ'],
+    r:['г','ř'], R:['Ʀ'],
+    s:['ѕ','$','5'], S:['Ѕ','5'],
+    t:['т','7','ţ'], T:['Т','7'],
+    u:['υ','ù'], U:['Ս'],
+    v:['ѵ','ν'], V:['Ѵ','Ν'],
+    w:['ѡ','ŵ'], W:['Ѡ'],
+    x:['х','×'], X:['Х','Χ'],
+    y:['у','γ','ý'], Y:['У','Υ'],
+    z:['ᴢ','ż','2'], Z:['Ζ','Ż']
+  };
+  function homoglyphOnce(raw){
+    var out = '';
+    for (var i = 0; i < raw.length; i++){
+      var ch = raw[i];
+      var cands = HOMO[ch];
+      if (!cands){ out += ch; continue; }
+      out += cands[Math.floor(Math.random() * cands.length)];
+    }
+    return out;
+  }
+
   var input = document.getElementById('text-input');
   var demoNote = document.getElementById('demo-note');
   var DEMO = 'Telegram';
@@ -487,7 +536,7 @@
     return out;
   }
 
-  function copyMixText(btn, text){
+  function makeCopyHandler(btn, text){
     btn.classList.add('copied');
     var original = text;
     btn.textContent = text + '  ✓';
@@ -519,7 +568,7 @@
       copyBtn.className = 'mix-copy';
       copyBtn.textContent = text;
       copyBtn.setAttribute('aria-label', 'Sao chép kiểu trộn số ' + (idx + 1) + ': ' + text);
-      copyBtn.addEventListener('click', function(){ copyMixText(copyBtn, mixResults[idx]); });
+      copyBtn.addEventListener('click', function(){ makeCopyHandler(copyBtn, mixResults[idx]); });
 
       var rerollBtn = document.createElement('button');
       rerollBtn.type = 'button';
@@ -552,11 +601,71 @@
   }
 
   mixRegenerateAllBtn.addEventListener('click', renderMix);
-  input.addEventListener('input', renderMix);
+
+  // ---------- Look-alike: swap each letter for a visually similar character ----------
+  var LOOK_COUNT = 6;
+  var lookResults = [];
+  var lookOutput = document.getElementById('look-output');
+  var lookCountEl = document.getElementById('look-count');
+  var lookRegenerateAllBtn = document.getElementById('look-regenerate-all');
+
+  function paintLook(){
+    lookOutput.innerHTML = '';
+    lookResults.forEach(function(text, idx){
+      var row = document.createElement('div');
+      row.className = 'mix-row';
+
+      var indexSpan = document.createElement('span');
+      indexSpan.className = 'mix-index';
+      indexSpan.textContent = (idx + 1) + '.';
+
+      var copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'mix-copy';
+      copyBtn.textContent = text;
+      copyBtn.setAttribute('aria-label', 'Sao chép ký tự giống chữ số ' + (idx + 1) + ': ' + text);
+      copyBtn.addEventListener('click', function(){ makeCopyHandler(copyBtn, lookResults[idx]); });
+
+      var rerollBtn = document.createElement('button');
+      rerollBtn.type = 'button';
+      rerollBtn.className = 'mix-reroll';
+      rerollBtn.title = 'Đổi ngẫu nhiên dòng này';
+      rerollBtn.setAttribute('aria-label', 'Đổi ngẫu nhiên dòng ' + (idx + 1));
+      rerollBtn.textContent = '↻';
+      rerollBtn.addEventListener('click', function(){
+        var raw2 = input.value.trim() ? input.value : DEMO;
+        var newText = homoglyphOnce(raw2);
+        lookResults[idx] = newText;
+        copyBtn.textContent = newText;
+        copyBtn.classList.remove('copied');
+        copyBtn.setAttribute('aria-label', 'Sao chép ký tự giống chữ số ' + (idx + 1) + ': ' + newText);
+      });
+
+      row.appendChild(indexSpan);
+      row.appendChild(copyBtn);
+      row.appendChild(rerollBtn);
+      lookOutput.appendChild(row);
+    });
+    lookCountEl.textContent = LOOK_COUNT + ' biến thể';
+  }
+
+  function renderLook(){
+    var raw = input.value.trim() ? input.value : DEMO;
+    lookResults = [];
+    for (var i = 0; i < LOOK_COUNT; i++) lookResults.push(homoglyphOnce(raw));
+    paintLook();
+  }
+
+  lookRegenerateAllBtn.addEventListener('click', renderLook);
+
+  input.addEventListener('input', function(){
+    renderMix();
+    renderLook();
+  });
 
   // Hero rotating demo
   var heroPreview = document.getElementById('hero-preview');
-  var HERO_STYLES = [bold, script, fraktur, doubleStruck, sansBoldItalic, flipText];
+  var HERO_STYLES = [bold, script, fraktur, doubleStruck, sansBoldItalic, flipText, homoglyphOnce];
   var heroIndex = 0;
   var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -582,6 +691,7 @@
 
   syncDemoNote();
   renderMix();
+  renderLook();
 })();
 </script>
 </body>
