@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Ký tự giống chữ — thay từng chữ cái bằng ký tự Unicode trông giống hệt</title>
+<title>Ký tự giống chữ — bộ ký tự sâu cho T, e, l, g, r, a, m</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Gõ một câu, mỗi chữ cái được thay bằng một ký tự Unicode khác nhưng nhìn gần như giống hệt — chữ Nga, Hy Lạp, Armenia, Cherokee, số, ký hiệu hoặc cặp ký tự ghép. Dán thẳng vào status, tin nhắn hay tiểu sử Facebook.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -314,6 +314,17 @@
   @media (prefers-reduced-motion: reduce){
     *{ transition-duration:0.001ms !important; }
   }
+
+  .focus-strip{ display:flex; flex-wrap:wrap; gap:0.4rem; margin:0 0 1.35rem; }
+  .focus-cell{
+    border:1px solid var(--line-strong); border-radius:7px;
+    padding:0.35rem 0.6rem; text-align:center; min-width:3.4rem;
+  }
+  .focus-cell b{ display:block; font-size:1.05rem; font-weight:700; }
+  .focus-cell span{ font-family:var(--font-mono); font-size:0.68rem; color:var(--ink-soft); }
+  .stat-line{ font-family:var(--font-mono); font-size:0.76rem; color:var(--ink-soft); margin:0 0 1rem; }
+  .stat-line b{ color:var(--accent); font-weight:500; }
+  tr.is-focus td.src{ color:var(--accent); }
 </style>
 </head>
 <body>
@@ -321,7 +332,7 @@
 
   <header class="hero">
     <h1>Cùng một chữ, khác từng ký tự.</h1>
-    <p class="lede">Gõ một câu bất kỳ: mỗi chữ cái sẽ được thay bằng một ký tự Unicode khác nhưng nhìn gần như giống hệt — chữ Nga, Hy Lạp, Armenia, Cherokee, Coptic, chữ có dấu phụ, số, ký hiệu, hoặc cặp ký tự ghép lại thành hình giống chữ. Dán thẳng vào status, tin nhắn hay tiểu sử Facebook, không cần cài thêm gì.</p>
+    <p class="lede">Mỗi chữ cái được thay bằng một ký tự Unicode khác nhưng nhìn gần như giống hệt. Bộ dữ liệu được dựng từ bảng Unicode 15, đào sâu nhất ở bảy chữ <b>T e l g r a m</b> — mỗi chữ có 37–65 ký tự thay thế (407 ứng viên cho riêng chữ "Telegram"), gom từ chữ Nga, Hy Lạp, Cherokee, Lisu, Coptic, Canada, Runic, chữ có dấu, ký tự toán học, ký tự trong khung và ký tự ghép.</p>
 
     <div class="hero-demo">
       <span class="hero-demo-label">Ví dụ, chữ "Telegram":</span>
@@ -331,12 +342,15 @@
     <label class="field-label" for="text-input">Văn bản của bạn</label>
     <input id="text-input" type="text" autocomplete="off" spellcheck="false" placeholder="Gõ gì đó đi…" maxlength="300">
     <p class="note" id="demo-note">Đang xem trước bằng chữ "Telegram" — gõ nội dung của bạn ở trên để thay thế.</p>
-    <p class="note">Chữ tiếng Việt có dấu (ă, â, ê, ô, ơ, ư, đ và các thanh điệu) cũng được đổi: ký tự thay thế trông giống hệt bản gốc nhưng được dựng từ chữ nền + dấu rời, nên mã bên trong khác nhau.</p>
+    <p class="note">Chữ tiếng Việt có dấu cũng đổi được: ký tự thay thế nhìn giống hệt nhưng dựng từ chữ nền cộng dấu rời nên mã bên trong khác.</p>
   </header>
 
   <section class="mix-section">
     <h2>Trộn ký tự giống chữ</h2>
-    <p>Mỗi chữ cái được bốc ngẫu nhiên một ký tự khác có hình dáng tương tự — "T" có thể ra Т tiếng Nga hoặc Ꭲ Cherokee, "l" ra "1", "I" hay "ℓ", "e" ra "е", "ė" hay "∈". Chỉnh các tuỳ chọn bên dưới để đổi độ mạnh và loại ký tự được dùng. Nhấn vào một dòng để chép, bấm nút xoay để đổi riêng dòng đó.</p>
+    <p>Bật tắt từng nhóm ký tự bên dưới để đổi độ "lạ" của chuỗi. Nhấn vào một dòng để chép, bấm nút xoay để đổi riêng dòng đó.</p>
+
+    <div class="focus-strip" id="focus-strip"></div>
+    <p class="stat-line" id="stat-line"></p>
 
     <div class="controls">
       <div class="ctrl">
@@ -344,25 +358,17 @@
         <input type="range" id="intensity" min="10" max="100" step="10" value="100">
         <span class="ctrl-value" id="intensity-value">100%</span>
       </div>
-      <div class="ctrl">
-        <input type="checkbox" id="opt-nums" checked>
-        <label for="opt-nums">Số &amp; ký hiệu (0 1 $ ×)</label>
-      </div>
-      <div class="ctrl">
-        <input type="checkbox" id="opt-multi">
-        <label for="opt-multi">Ký tự ghép (rn, vv, cl)</label>
-      </div>
-      <div class="ctrl">
-        <input type="checkbox" id="opt-accent" checked>
-        <label for="opt-accent">Chữ có dấu phụ (ạ ė ń)</label>
-      </div>
+      <div class="ctrl"><input type="checkbox" id="opt-accent" checked><label for="opt-accent">Dấu phụ (ẹ ǧ ṛ)</label></div>
+      <div class="ctrl"><input type="checkbox" id="opt-nums" checked><label for="opt-nums">Số &amp; ký hiệu (4 1 €)</label></div>
+      <div class="ctrl"><input type="checkbox" id="opt-math" checked><label for="opt-math">Toán học (𝐓 𝔢 𝕝)</label></div>
+      <div class="ctrl"><input type="checkbox" id="opt-mod"><label for="opt-mod">Chữ trên/dưới (ᵀ ₑ ʳ)</label></div>
+      <div class="ctrl"><input type="checkbox" id="opt-enclosed"><label for="opt-enclosed">Trong khung (ⓣ Ⓔ 🄶)</label></div>
+      <div class="ctrl"><input type="checkbox" id="opt-rare"><label for="opt-rare">Bảng mã hiếm (Ꭲ ꓡ Ⲙ)</label></div>
+      <div class="ctrl"><input type="checkbox" id="opt-multi"><label for="opt-multi">Ký tự ghép (rn, IVI)</label></div>
       <div class="ctrl">
         <label for="variant-count">Số dòng</label>
         <select id="variant-count">
-          <option>6</option>
-          <option selected>10</option>
-          <option>16</option>
-          <option>24</option>
+          <option>6</option><option selected>10</option><option>16</option><option>24</option><option>40</option>
         </select>
       </div>
     </div>
@@ -374,37 +380,29 @@
     <div id="look-output"></div>
   </section>
 
-  <details class="lookup">
-    <summary>Xem toàn bộ bảng ký tự giống chữ (nhấn vào ký tự để chép)</summary>
+  <details class="lookup" open>
+    <summary>Bảng tra ký tự — bảy chữ T e l g r a m xếp trước (nhấn vào ký tự để chép)</summary>
     <div class="table-wrap">
       <table class="glyph-table">
-        <thead>
-          <tr><th>Chữ</th><th>Các ký tự trông giống</th></tr>
-        </thead>
+        <thead><tr><th>Chữ</th><th>Các ký tự trông giống</th></tr></thead>
         <tbody id="glyph-table-body"></tbody>
       </table>
     </div>
   </details>
 
   <footer class="site-footer">
-    Đây không phải font chữ, mà là những ký tự Unicode riêng biệt có hình dáng trùng nhau (gọi là homoglyph) — vì vậy dán được ở hầu hết mọi nơi cho phép nhập văn bản, kể cả ngoài Facebook. Lưu ý: chuỗi đã đổi ký tự sẽ không còn tìm được bằng chức năng tìm kiếm thông thường, trình đọc màn hình đọc sai, và một số nền tảng có thể tự chuẩn hoá lại hoặc chặn tên hiển thị dùng kiểu này.
+    Dữ liệu dựng theo cách Unicode gọi là confusables (UTS #39): những ký tự khác mã nhưng trùng hình. Nhóm "bảng mã hiếm" gồm Cherokee, Lisu, Coptic, Canadian Syllabics, Runic — đẹp trên máy tính nhưng một số điện thoại thiếu font sẽ hiện ô vuông, nên hãy xem thử trước khi đăng. Chuỗi đã đổi ký tự sẽ không tìm được bằng tìm kiếm thường, trình đọc màn hình đọc sai, và vài nền tảng có thể tự chuẩn hoá lại hoặc từ chối tên hiển thị kiểu này.
   </footer>
 
 </div>
-
 <script>
 (function(){
   "use strict";
 
-  /* ============================================================
-     BỘ KÝ TỰ GIỐNG CHỮ
-     BASE  : chữ cái từ bảng mã khác (Cyrillic, Hy Lạp, Armenia,
-             Cherokee, Coptic, Canadian syllabics, fullwidth, số La Mã…)
-     ACCENT: chữ Latin có dấu phụ
-     NUM   : số và ký hiệu trông giống chữ
-     MULTI : cặp/bộ ký tự ghép lại thành hình giống chữ
-     ============================================================ */
+  /* Dữ liệu 14 chữ trọng tâm (T t E e L l G g R r A a M m) dựng từ bảng Unicode 15.0 */
+  var FOCUS = {"T":{"cross":["Т","Τ","Ŧ","Ƭ","Ʈ","ᴛ","†","⊤","Ｔ"],"rare":["Ⲧ","Ꭲ","ꓔ","丅","ㄒ","Ꮖ"],"accent":["Ţ","Ť","Ț","Ṫ","Ṭ","Ṯ","Ṱ"],"math":["𝐓","𝑇","𝑻","𝒯","𝓣","𝔗","𝕋","𝕿","𝖳","𝗧","𝘛","𝙏","𝚃"],"enclosed":["Ⓣ","🅃"],"mod":["ᵀ"],"num":["7"],"multi":["|‾","⊤","+"]},"t":{"cross":["т","ţ","ť","ṭ","ț","ŧ","ƭ","ʈ","ƫ","ꞇ","τ","ᴛ","†","ｔ"],"rare":["ϯ","ⲧ"],"accent":["ţ","ť","ț","ṫ","ṭ","ṯ","ṱ","ẗ"],"math":["𝐭","𝑡","𝒕","𝓉","𝓽","𝔱","𝕥","𝖙","𝗍","𝘁","𝘵","𝙩","𝚝"],"enclosed":["ⓣ"],"mod":["ᵗ","ₜ"],"num":["7","+"],"multi":["+","†"]},"E":{"cross":["Е","Ε","Ɛ","Ǝ","ᴇ","ℰ","Ｅ"],"rare":["Ⲉ","Ꭼ","ꓰ","ᕮ","ℰ"],"accent":["È","É","Ê","Ë","Ē","Ĕ","Ė","Ę","Ě","Ȅ","Ȇ","Ȩ","Ḕ","Ḗ","Ḙ","Ḛ","Ḝ","Ẹ","Ẻ","Ẽ","Ế","Ề","Ể","Ễ","Ệ"],"math":["𝐄","𝐸","𝑬","𝓔","𝔈","𝔼","𝕰","𝖤","𝗘","𝘌","𝙀","𝙴"],"enclosed":["Ⓔ","🄴"],"mod":["ᴱ"],"num":["3","€"],"multi":["|=","Ɛ"]},"e":{"cross":["е","ҽ","є","℮","ℯ","ⅇ","ε","ϵ","ҿ","ǝ","ə","ꬲ","ᴇ","∈","∊","ｅ"],"rare":["ꭼ","ℯ","ⅇ"],"accent":["è","é","ê","ë","ē","ĕ","ė","ę","ě","ȅ","ȇ","ȩ","ḕ","ḗ","ḙ","ḛ","ḝ","ẹ","ẻ","ẽ","ế","ề","ể","ễ","ệ"],"math":["𝐞","𝑒","𝒆","𝓮","𝔢","𝕖","𝖊","𝖾","𝗲","𝘦","𝙚","𝚎"],"enclosed":["ⓔ"],"mod":["ᵉ","ₑ"],"num":["3","€"],"multi":["ҽ","ɛ"]},"L":{"cross":["Ł","Ƚ","Ꝇ","ʟ","£","Ⅼ","Ｌ"],"rare":["Ꮮ","ᒪ","Ⳑ","ꓡ","ℒ","Ⅼ"],"accent":["Ĺ","Ļ","Ľ","Ḷ","Ḹ","Ḻ","Ḽ"],"math":["𝐋","𝐿","𝑳","𝓛","𝔏","𝕃","𝕷","𝖫","𝗟","𝘓","𝙇","𝙻"],"enclosed":["Ⓛ","🄻"],"mod":["ᴸ"],"num":["£"],"multi":["|_","I_"]},"l":{"cross":["ⅼ","ℓ","Ɩ","ǀ","І","Ι","ӏ","ɭ","ł","ʟ","Ɨ","∣","ǁ","ｌ"],"rare":["│","ᛁ","ꓲ","ℓ","ⅼ"],"accent":["ĺ","ļ","ľ","ḷ","ḹ","ḻ","ḽ"],"math":["𝐥","𝑙","𝒍","𝓁","𝓵","𝔩","𝕝","𝖑","𝗅","𝗹","𝘭","𝙡","𝚕"],"enclosed":["ⓛ"],"mod":["ˡ","ₗ"],"num":["1","|","¦"],"multi":["|","1","I"]},"G":{"cross":["Ԍ","Ɠ","ɢ","Ｇ"],"rare":["Ꮆ","ᏻ","ꓖ"],"accent":["Ĝ","Ğ","Ġ","Ģ","Ǧ","Ǵ","Ḡ"],"math":["𝐆","𝐺","𝑮","𝒢","𝓖","𝔊","𝔾","𝕲","𝖦","𝗚","𝘎","𝙂","𝙶"],"enclosed":["Ⓖ","🄶"],"mod":["ᴳ"],"num":["6"],"multi":["(_","Ԍ"]},"g":{"cross":["ɡ","ǥ","ɠ","ƍ","ɢ","ᶃ","ꬶ","ℊ","ｇ"],"rare":["ց","ℊ"],"accent":["ĝ","ğ","ġ","ģ","ǧ","ǵ","ḡ"],"math":["𝐠","𝑔","𝒈","𝓰","𝔤","𝕘","𝖌","𝗀","𝗴","𝘨","𝙜","𝚐"],"enclosed":["ⓖ"],"mod":["ᵍ"],"num":["9"],"multi":["ɡ","9"]},"R":{"cross":["Ʀ","Ɽ","Ɍ","ℛ","ℜ","ℝ","®","ʀ","Я","Ｒ"],"rare":["Ꭱ","ᖇ","ꓣ","ℛ","ℜ","ℝ"],"accent":["Ŕ","Ŗ","Ř","Ȑ","Ȓ","Ṙ","Ṛ","Ṝ","Ṟ"],"math":["𝐑","𝑅","𝑹","𝓡","𝕽","𝖱","𝗥","𝘙","𝙍","𝚁"],"enclosed":["Ⓡ","🄬","🅁"],"mod":["ᴿ"],"num":["®"],"multi":["Я","ʀ"]},"r":{"cross":["г","ᴦ","ɼ","ɽ","ɾ","ɿ","ʀ","ɹ","ɍ","ꭇ","ꭈ","ｒ"],"rare":["ⲅ","ᒥ"],"accent":["ŕ","ŗ","ř","ȑ","ȓ","ṙ","ṛ","ṝ","ṟ"],"math":["𝐫","𝑟","𝒓","𝓇","𝓻","𝔯","𝕣","𝖗","𝗋","𝗿","𝘳","𝙧","𝚛"],"enclosed":["ⓡ"],"mod":["ʳ","ᵣ"],"num":["®"],"multi":["ɾ","ʀ","г"]},"A":{"cross":["А","Α","Λ","∀","ᴀ","Ａ"],"rare":["Ꭺ","ᗅ","Ⲁ","ꓮ"],"accent":["À","Á","Â","Ã","Ä","Å","Ā","Ă","Ą","Ǎ","Ǟ","Ǡ","Ǻ","Ȁ","Ȃ","Ȧ","Ḁ","Ạ","Ả","Ấ","Ầ","Ẩ","Ẫ","Ậ","Ắ","Ằ","Ẳ","Ẵ","Ặ","Å"],"math":["𝐀","𝐴","𝑨","𝒜","𝓐","𝔄","𝔸","𝕬","𝖠","𝗔","𝘈","𝘼","𝙰"],"enclosed":["Ⓐ","🄰"],"mod":["ᴬ"],"num":["4","@"],"multi":["/\\","Λ","∆"]},"a":{"cross":["а","α","ɑ","ɒ","⍺","ᴀ","ª","ɐ","ᶏ","ⱥ","ａ"],"rare":["ª"],"accent":["à","á","â","ã","ä","å","ā","ă","ą","ǎ","ǟ","ǡ","ǻ","ȁ","ȃ","ȧ","ḁ","ạ","ả","ấ","ầ","ẩ","ẫ","ậ","ắ","ằ","ẳ","ẵ","ặ"],"math":["𝐚","𝑎","𝒂","𝒶","𝓪","𝔞","𝕒","𝖆","𝖺","𝗮","𝘢","𝙖","𝚊"],"enclosed":["ⓐ"],"mod":["ᵃ","ₐ"],"num":["4","@"],"multi":["ɑ","@"]},"M":{"cross":["М","Μ","Ϻ","Ⅿ","Ɱ","ᴍ","ℳ","Ｍ"],"rare":["Ꮇ","Ⲙ","ᗰ","ꓟ","ℳ","Ⅿ"],"accent":["Ḿ","Ṁ","Ṃ"],"math":["𝐌","𝑀","𝑴","𝓜","𝔐","𝕄","𝕸","𝖬","𝗠","𝘔","𝙈","𝙼"],"enclosed":["Ⓜ","🄼"],"mod":["ᴹ"],"num":["₥"],"multi":["IVI","|V|","ʌʌ","/\\/\\"]},"m":{"cross":["м","ⅿ","ᴍ","ɱ","ɯ","ᵯ","ꭑ","ᴟ","ϻ","ｍ"],"rare":["ⅿ"],"accent":["ḿ","ṁ","ṃ"],"math":["𝐦","𝑚","𝒎","𝓂","𝓶","𝔪","𝕞","𝖒","𝗆","𝗺","𝘮","𝙢","𝚖"],"enclosed":["ⓜ"],"mod":["ᵐ","ₘ"],"num":["₥"],"multi":["rn","ɾn","ʀn","nn","rη"]}};
 
+  /* Các chữ còn lại */
   var BASE = {
     a:['а','α','ɑ','⍺','ａ','ᴀ','ɒ'],
     A:['А','Α','Ꭺ','Ａ','ᗅ','Ꙗ'],
@@ -586,39 +584,92 @@
     j:['ʝ','ĵ']
   };
 
-  /* ---------- Xây pool ứng viên ---------- */
-  function poolFor(ch, opts){
-    var pool = [];
-    if (BASE[ch]) pool = pool.concat(BASE[ch]);
-    if (opts.accent && ACCENT[ch]) pool = pool.concat(ACCENT[ch]);
-    if (opts.nums && NUM[ch]) pool = pool.concat(NUM[ch]);
-    if (opts.multi && MULTI[ch]) pool = pool.concat(MULTI[ch]);
 
-    // Chữ có dấu (kể cả tiếng Việt): dạng tách dấu trông giống hệt
-    if (String.prototype.normalize){
-      var nfd = ch.normalize('NFD');
-      if (nfd !== ch) pool.push(nfd);
-      var nfc = ch.normalize('NFC');
-      if (nfc !== ch) pool.push(nfc);
-    }
-
-    // loại trùng và loại chính nó
-    var seen = {}, out = [];
-    for (var i = 0; i < pool.length; i++){
-      var c = pool[i];
-      if (!c || c === ch || seen[c]) continue;
-      seen[c] = 1;
-      out.push(c);
+  /* ---------- Sinh ký tự toán học ---------- */
+  var A0=65, Z0=90, a0=97, z0=122, d0=48, d9=57;
+  function mathAlpha(ch, up, low, dig, holes){
+    if (holes && holes[ch] !== undefined) return holes[ch];
+    var c = ch.charCodeAt(0);
+    if (up != null && c >= A0 && c <= Z0) return String.fromCodePoint(up + (c - A0));
+    if (low != null && c >= a0 && c <= z0) return String.fromCodePoint(low + (c - a0));
+    if (dig != null && c >= d0 && c <= d9) return String.fromCodePoint(dig + (c - d0));
+    return '';
+  }
+  var H_IT={h:'\u210E'},
+      H_SC={B:'\u212C',E:'\u2130',F:'\u2131',H:'\u210B',I:'\u2110',L:'\u2112',M:'\u2133',R:'\u211B',e:'\u212F',g:'\u210A',o:'\u2134'},
+      H_FR={C:'\u212D',H:'\u210C',I:'\u2111',R:'\u211C',Z:'\u2128'},
+      H_DS={C:'\u2102',H:'\u210D',N:'\u2115',P:'\u2119',Q:'\u211A',R:'\u211D',Z:'\u2124'};
+  var MATH_STYLES = [
+    [0x1D400,0x1D41A,0x1D7CE,null],[0x1D434,0x1D44E,null,H_IT],[0x1D468,0x1D482,null,null],
+    [0x1D49C,0x1D4B6,null,H_SC],[0x1D4D0,0x1D4EA,null,null],[0x1D504,0x1D51E,null,H_FR],
+    [0x1D56C,0x1D586,null,null],[0x1D538,0x1D552,0x1D7D8,H_DS],[0x1D5A0,0x1D5BA,0x1D7E2,null],
+    [0x1D5D4,0x1D5EE,0x1D7EC,null],[0x1D608,0x1D622,null,null],[0x1D63C,0x1D656,null,null],
+    [0x1D670,0x1D68A,0x1D7F6,null]
+  ];
+  function mathList(ch){
+    var out = [];
+    for (var i = 0; i < MATH_STYLES.length; i++){
+      var s = MATH_STYLES[i], g = mathAlpha(ch, s[0], s[1], s[2], s[3]);
+      if (g) out.push(g);
     }
     return out;
   }
 
-  function homoglyphOnce(raw, opts){
+  /* ---------- Sinh ký tự trong khung ---------- */
+  function enclosedList(ch){
+    var c = ch.charCodeAt(0), out = [];
+    if (c >= a0 && c <= z0){
+      out.push(String.fromCodePoint(0x24D0 + (c - a0)));       // ⓐ
+      out.push(String.fromCodePoint(0x249C + (c - a0)));       // ⒜
+      c = ch.toUpperCase().charCodeAt(0);
+    }
+    if (c >= A0 && c <= Z0){
+      out.push(String.fromCodePoint(0x24B6 + (c - A0)));       // Ⓐ
+      out.push(String.fromCodePoint(0x1F130 + (c - A0)));      // 🄰
+      out.push(String.fromCodePoint(0x1F170 + (c - A0)));      // 🅰
+      out.push(String.fromCodePoint(0x1F150 + (c - A0)));      // 🅐
+    }
+    return out;
+  }
+
+  /* ---------- Gom ứng viên ---------- */
+  function poolFor(ch, o){
+    var pool = [], f = FOCUS[ch];
+    if (f){
+      pool = pool.concat(f.cross);
+      if (o.rare) pool = pool.concat(f.rare);
+      if (o.accent) pool = pool.concat(f.accent);
+      if (o.nums) pool = pool.concat(f.num);
+      if (o.mod) pool = pool.concat(f.mod);
+      if (o.multi) pool = pool.concat(f.multi);
+      if (o.math) pool = pool.concat(f.math);
+      if (o.enclosed) pool = pool.concat(f.enclosed);
+    } else {
+      if (BASE[ch]) pool = pool.concat(BASE[ch]);
+      if (o.accent && ACCENT[ch]) pool = pool.concat(ACCENT[ch]);
+      if (o.nums && NUM[ch]) pool = pool.concat(NUM[ch]);
+      if (o.multi && MULTI[ch]) pool = pool.concat(MULTI[ch]);
+    }
+    if (o.math) pool = pool.concat(mathList(ch));
+    if (o.enclosed) pool = pool.concat(enclosedList(ch));
+    if (String.prototype.normalize){
+      var nfd = ch.normalize('NFD'); if (nfd !== ch) pool.push(nfd);
+      var nfc = ch.normalize('NFC'); if (nfc !== ch) pool.push(nfc);
+    }
+    var seen = {}, out = [];
+    for (var i = 0; i < pool.length; i++){
+      var g = pool[i];
+      if (!g || g === ch || seen[g]) continue;
+      seen[g] = 1; out.push(g);
+    }
+    return out;
+  }
+
+  function homoglyphOnce(raw, o){
     var out = '';
     for (var i = 0; i < raw.length; i++){
-      var ch = raw[i];
-      var pool = poolFor(ch, opts);
-      if (!pool.length || Math.random() * 100 > opts.intensity){ out += ch; continue; }
+      var ch = raw[i], pool = poolFor(ch, o);
+      if (!pool.length || Math.random() * 100 > o.intensity){ out += ch; continue; }
       out += pool[Math.floor(Math.random() * pool.length)];
     }
     return out;
@@ -628,162 +679,160 @@
   var input = document.getElementById('text-input');
   var demoNote = document.getElementById('demo-note');
   var DEMO = 'Telegram';
-
   var intensityEl = document.getElementById('intensity');
   var intensityValueEl = document.getElementById('intensity-value');
   var optNums = document.getElementById('opt-nums');
   var optMulti = document.getElementById('opt-multi');
   var optAccent = document.getElementById('opt-accent');
+  var optMath = document.getElementById('opt-math');
+  var optMod = document.getElementById('opt-mod');
+  var optEnclosed = document.getElementById('opt-enclosed');
+  var optRare = document.getElementById('opt-rare');
   var variantCountEl = document.getElementById('variant-count');
-
   var lookOutput = document.getElementById('look-output');
   var lookCountEl = document.getElementById('look-count');
-  var lookRegenerateAllBtn = document.getElementById('look-regenerate-all');
+  var statLine = document.getElementById('stat-line');
+  var focusStrip = document.getElementById('focus-strip');
   var lookResults = [];
 
   function currentOpts(){
     return {
       intensity: parseInt(intensityEl.value, 10),
-      nums: optNums.checked,
-      multi: optMulti.checked,
-      accent: optAccent.checked
+      nums: optNums.checked, multi: optMulti.checked, accent: optAccent.checked,
+      math: optMath.checked, mod: optMod.checked, enclosed: optEnclosed.checked,
+      rare: optRare.checked
     };
   }
-  function currentText(){
-    return input.value.trim() ? input.value : DEMO;
-  }
-  function variantCount(){
-    return parseInt(variantCountEl.value, 10) || 10;
-  }
+  function currentText(){ return input.value.trim() ? input.value : DEMO; }
 
   function fallbackCopy(text, cb){
     try{
       var ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.focus(); ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      cb();
-    }catch(e){ /* bỏ qua */ }
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta); cb();
+    }catch(e){}
   }
-
   function copyWithFeedback(btn, text, suffix){
     btn.classList.add('copied');
     var original = text;
-    btn.textContent = text + (suffix || '  ✓');
-    function reset(){
-      setTimeout(function(){
-        btn.classList.remove('copied');
-        btn.textContent = original;
-      }, 1300);
-    }
+    btn.textContent = text + (suffix === undefined ? '  ✓' : suffix);
+    function reset(){ setTimeout(function(){ btn.classList.remove('copied'); btn.textContent = original; }, 1300); }
     if (navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(text).then(reset)['catch'](function(){ fallbackCopy(text, reset); });
-    } else {
-      fallbackCopy(text, reset);
+    } else { fallbackCopy(text, reset); }
+  }
+
+  /* ---------- Thống kê ---------- */
+  var SUP_DIGITS = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+  function supNum(n){
+    return String(n).split('').map(function(d){ return SUP_DIGITS[+d]; }).join('');
+  }
+  function updateStats(){
+    var o = currentOpts(), raw = currentText(), logTotal = 0, pool = 0;
+    for (var i = 0; i < raw.length; i++){
+      var n = poolFor(raw[i], o).length;
+      pool += n;
+      logTotal += Math.log10(n + 1);
     }
+    var txt;
+    if (logTotal < 6){
+      txt = Math.round(Math.pow(10, logTotal)).toLocaleString('vi-VN');
+    } else {
+      var exp = Math.floor(logTotal), man = Math.pow(10, logTotal - exp);
+      txt = man.toFixed(1).replace('.', ',') + ' × 10' + supNum(exp);
+    }
+    statLine.innerHTML = 'Chuỗi hiện tại: <b>' + pool + '</b> ứng viên ký tự · <b>' + txt + '</b> tổ hợp có thể tạo ra';
+
+    focusStrip.innerHTML = '';
+    'Telegram'.split('').forEach(function(ch){
+      var cell = document.createElement('div');
+      cell.className = 'focus-cell';
+      cell.innerHTML = '<b>' + ch + '</b><span>' + poolFor(ch, o).length + '</span>';
+      focusStrip.appendChild(cell);
+    });
   }
 
-  function syncDemoNote(){
-    demoNote.style.display = input.value.trim() ? 'none' : 'block';
-  }
-
+  /* ---------- Kết quả ---------- */
   function paintLook(){
     lookOutput.innerHTML = '';
     lookResults.forEach(function(text, idx){
-      var row = document.createElement('div');
-      row.className = 'mix-row';
-
+      var row = document.createElement('div'); row.className = 'mix-row';
       var indexSpan = document.createElement('span');
-      indexSpan.className = 'mix-index';
-      indexSpan.textContent = (idx + 1) + '.';
-
+      indexSpan.className = 'mix-index'; indexSpan.textContent = (idx + 1) + '.';
       var copyBtn = document.createElement('button');
-      copyBtn.type = 'button';
-      copyBtn.className = 'mix-copy';
-      copyBtn.textContent = text;
+      copyBtn.type = 'button'; copyBtn.className = 'mix-copy'; copyBtn.textContent = text;
       copyBtn.setAttribute('aria-label', 'Sao chép biến thể ' + (idx + 1) + ': ' + text);
       copyBtn.addEventListener('click', function(){ copyWithFeedback(copyBtn, lookResults[idx]); });
-
       var rerollBtn = document.createElement('button');
-      rerollBtn.type = 'button';
-      rerollBtn.className = 'mix-reroll';
+      rerollBtn.type = 'button'; rerollBtn.className = 'mix-reroll';
       rerollBtn.title = 'Đổi ngẫu nhiên dòng này';
       rerollBtn.setAttribute('aria-label', 'Đổi ngẫu nhiên dòng ' + (idx + 1));
       rerollBtn.textContent = '↻';
       rerollBtn.addEventListener('click', function(){
-        var newText = homoglyphOnce(currentText(), currentOpts());
-        lookResults[idx] = newText;
-        copyBtn.textContent = newText;
-        copyBtn.classList.remove('copied');
-        copyBtn.setAttribute('aria-label', 'Sao chép biến thể ' + (idx + 1) + ': ' + newText);
+        var t = homoglyphOnce(currentText(), currentOpts());
+        lookResults[idx] = t; copyBtn.textContent = t; copyBtn.classList.remove('copied');
       });
-
-      row.appendChild(indexSpan);
-      row.appendChild(copyBtn);
-      row.appendChild(rerollBtn);
+      row.appendChild(indexSpan); row.appendChild(copyBtn); row.appendChild(rerollBtn);
       lookOutput.appendChild(row);
     });
     lookCountEl.textContent = lookResults.length + ' biến thể';
   }
-
   function renderLook(){
-    var raw = currentText();
-    var opts = currentOpts();
-    var n = variantCount();
+    var raw = currentText(), o = currentOpts(), n = parseInt(variantCountEl.value, 10) || 10;
     lookResults = [];
     var seen = {};
     for (var i = 0; i < n; i++){
-      var text = '', tries = 0;
-      do {
-        text = homoglyphOnce(raw, opts);
-        tries++;
-      } while (seen[text] && tries < 12);
-      seen[text] = 1;
-      lookResults.push(text);
+      var t = '', tries = 0;
+      do { t = homoglyphOnce(raw, o); tries++; } while (seen[t] && tries < 15);
+      seen[t] = 1; lookResults.push(t);
     }
-    paintLook();
+    paintLook(); updateStats();
   }
 
-  lookRegenerateAllBtn.addEventListener('click', renderLook);
-  input.addEventListener('input', function(){ syncDemoNote(); renderLook(); });
-  intensityEl.addEventListener('input', function(){
-    intensityValueEl.textContent = intensityEl.value + '%';
+  document.getElementById('look-regenerate-all').addEventListener('click', renderLook);
+  input.addEventListener('input', function(){
+    demoNote.style.display = input.value.trim() ? 'none' : 'block';
     renderLook();
   });
-  [optNums, optMulti, optAccent, variantCountEl].forEach(function(el){
-    el.addEventListener('change', renderLook);
+  intensityEl.addEventListener('input', function(){
+    intensityValueEl.textContent = intensityEl.value + '%'; renderLook();
+  });
+  [optNums, optMulti, optAccent, optMath, optMod, optEnclosed, optRare, variantCountEl].forEach(function(el){
+    el.addEventListener('change', function(){ renderLook(); buildTable(); });
   });
 
   /* ---------- Bảng tra ---------- */
   function buildTable(){
     var body = document.getElementById('glyph-table-body');
-    var letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
-    var frag = document.createDocumentFragment();
-    letters.forEach(function(lo){
+    body.innerHTML = '';
+    var focusOrder = ['T','t','e','E','l','L','g','G','r','R','a','A','m','M'];
+    var rest = [];
+    'abcdefghijklmnopqrstuvwxyz'.split('').forEach(function(lo){
       [lo, lo.toUpperCase()].forEach(function(ch){
-        var pool = poolFor(ch, {nums:true, multi:true, accent:true});
-        if (!pool.length) return;
-        var tr = document.createElement('tr');
-        var td1 = document.createElement('td');
-        td1.className = 'src';
-        td1.textContent = ch;
-        var td2 = document.createElement('td');
-        pool.forEach(function(g){
-          var chip = document.createElement('button');
-          chip.type = 'button';
-          chip.className = 'glyph-chip';
-          chip.textContent = g;
-          chip.setAttribute('aria-label', 'Chép ký tự ' + g);
-          chip.addEventListener('click', function(){ copyWithFeedback(chip, g, ''); });
-          td2.appendChild(chip);
-        });
-        tr.appendChild(td1); tr.appendChild(td2);
-        frag.appendChild(tr);
+        if (focusOrder.indexOf(ch) === -1) rest.push(ch);
       });
+    });
+    var all = focusOrder.concat(rest);
+    var o = {nums:true, multi:true, accent:true, math:true, mod:true, enclosed:true, rare:true};
+    var frag = document.createDocumentFragment();
+    all.forEach(function(ch){
+      var pool = poolFor(ch, o);
+      if (!pool.length) return;
+      var tr = document.createElement('tr');
+      if (FOCUS[ch]) tr.className = 'is-focus';
+      var td1 = document.createElement('td');
+      td1.className = 'src';
+      td1.textContent = ch + (FOCUS[ch] ? ' ★' : '');
+      var td2 = document.createElement('td');
+      pool.forEach(function(g){
+        var chip = document.createElement('button');
+        chip.type = 'button'; chip.className = 'glyph-chip'; chip.textContent = g;
+        chip.setAttribute('aria-label', 'Chép ký tự ' + g);
+        chip.addEventListener('click', function(){ copyWithFeedback(chip, g, ''); });
+        td2.appendChild(chip);
+      });
+      tr.appendChild(td1); tr.appendChild(td2); frag.appendChild(tr);
     });
     body.appendChild(frag);
   }
@@ -792,31 +841,31 @@
   var heroPreview = document.getElementById('hero-preview');
   var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var HERO_OPTS = [
-    {intensity:100, nums:false, multi:false, accent:false},
-    {intensity:100, nums:true,  multi:false, accent:true},
-    {intensity:70,  nums:true,  multi:true,  accent:false},
-    {intensity:100, nums:false, multi:false, accent:true}
+    {intensity:100, rare:false, accent:false, nums:false, math:false, mod:false, enclosed:false, multi:false},
+    {intensity:100, rare:false, accent:true,  nums:true,  math:false, mod:false, enclosed:false, multi:false},
+    {intensity:100, rare:true,  accent:false, nums:false, math:false, mod:false, enclosed:false, multi:false},
+    {intensity:100, rare:false, accent:false, nums:false, math:true,  mod:false, enclosed:false, multi:false}
   ];
   var heroIndex = 0;
   heroPreview.textContent = homoglyphOnce(DEMO, HERO_OPTS[0]);
-
   var heroTimer = null;
-  function cycleHero(){
-    heroPreview.style.opacity = 0;
-    setTimeout(function(){
-      heroIndex = (heroIndex + 1) % HERO_OPTS.length;
-      heroPreview.textContent = homoglyphOnce(DEMO, HERO_OPTS[heroIndex]);
-      heroPreview.style.opacity = 1;
-    }, 200);
+  if (!prefersReduced){
+    heroTimer = setInterval(function(){
+      heroPreview.style.opacity = 0;
+      setTimeout(function(){
+        heroIndex = (heroIndex + 1) % HERO_OPTS.length;
+        heroPreview.textContent = homoglyphOnce(DEMO, HERO_OPTS[heroIndex]);
+        heroPreview.style.opacity = 1;
+      }, 200);
+    }, 1900);
   }
-  if (!prefersReduced) heroTimer = setInterval(cycleHero, 1900);
   input.addEventListener('input', function stopHero(){
     if (heroTimer){ clearInterval(heroTimer); heroTimer = null; }
     input.removeEventListener('input', stopHero);
   });
 
   intensityValueEl.textContent = intensityEl.value + '%';
-  syncDemoNote();
+  demoNote.style.display = input.value.trim() ? 'none' : 'block';
   renderLook();
   buildTable();
 })();
