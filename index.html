@@ -365,6 +365,7 @@
       <div class="ctrl"><input type="checkbox" id="opt-enclosed"><label for="opt-enclosed">Trong khung (ⓣ Ⓔ 🄶)</label></div>
       <div class="ctrl"><input type="checkbox" id="opt-rare"><label for="opt-rare">Bảng mã hiếm (Ꭲ ꓡ Ⲙ)</label></div>
       <div class="ctrl"><input type="checkbox" id="opt-multi"><label for="opt-multi">Ký tự ghép (rn, IVI)</label></div>
+      <div class="ctrl"><input type="checkbox" id="opt-invisible" checked><label for="opt-invisible" title="Chèn mã ẩn làm nhiễu bộ lọc">Ký tự tàng hình</label></div>
       <div class="ctrl">
         <label for="variant-count">Số dòng</label>
         <select id="variant-count">
@@ -392,6 +393,8 @@
 
   <footer class="site-footer">
     Dữ liệu dựng theo cách Unicode gọi là confusables (UTS #39): những ký tự khác mã nhưng trùng hình. Nhóm "bảng mã hiếm" gồm Cherokee, Lisu, Coptic, Canadian Syllabics, Runic — đẹp trên máy tính nhưng một số điện thoại thiếu font sẽ hiện ô vuông, nên hãy xem thử trước khi đăng. Chuỗi đã đổi ký tự sẽ không tìm được bằng tìm kiếm thường, trình đọc màn hình đọc sai, và vài nền tảng có thể tự chuẩn hoá lại hoặc từ chối tên hiển thị kiểu này.
+    <br><br>
+    <b>Lưu ý nâng cao:</b> Nếu bật tính năng <b>"Ký tự tàng hình"</b>, đoạn văn bản khi dán vào các công cụ đếm ký tự sẽ hiển thị dài hơn bình thường do có chứa các mã ẩn (Zero-width characters) chia cắt từ khóa. Tính năng này giúp lách bộ lọc quét từ khóa mạnh mẽ hơn mà không làm thay đổi cách hiển thị chữ.
   </footer>
 
 </div>
@@ -400,7 +403,7 @@
   "use strict";
 
   /* Dữ liệu 14 chữ trọng tâm (T t E e L l G g R r A a M m) dựng từ bảng Unicode 15.0 */
-  var FOCUS = {"T":{"cross":["Т","Τ","Ŧ","Ƭ","Ʈ","ᴛ","†","⊤","Ｔ"],"rare":["Ⲧ","Ꭲ","ꓔ","丅","ㄒ","Ꮖ"],"accent":["Ţ","Ť","Ț","Ṫ","Ṭ","Ṯ","Ṱ"],"math":["𝐓","𝑇","𝑻","𝒯","𝓣","𝔗","𝕋","𝕿","𝖳","𝗧","𝘛","𝙏","𝚃"],"enclosed":["Ⓣ","🅃"],"mod":["ᵀ"],"num":["7"],"multi":["|‾","⊤","+"]},"t":{"cross":["т","ţ","ť","ṭ","ț","ŧ","ƭ","ʈ","ƫ","ꞇ","τ","ᴛ","†","ｔ"],"rare":["ϯ","ⲧ"],"accent":["ţ","ť","ț","ṫ","ṭ","ṯ","ṱ","ẗ"],"math":["𝐭","𝑡","𝒕","𝓉","𝓽","𝔱","𝕥","𝖙","𝗍","𝘁","𝘵","𝙩","𝚝"],"enclosed":["ⓣ"],"mod":["ᵗ","ₜ"],"num":["7","+"],"multi":["+","†"]},"E":{"cross":["Е","Ε","Ɛ","Ǝ","ᴇ","ℰ","Ｅ"],"rare":["Ⲉ","Ꭼ","ꓰ","ᕮ","ℰ"],"accent":["È","É","Ê","Ë","Ē","Ĕ","Ė","Ę","Ě","Ȅ","Ȇ","Ȩ","Ḕ","Ḗ","Ḙ","Ḛ","Ḝ","Ẹ","Ẻ","Ẽ","Ế","Ề","Ể","Ễ","Ệ"],"math":["𝐄","𝐸","𝑬","𝓔","𝔈","𝔼","𝕰","𝖤","𝗘","𝘌","𝙀","𝙴"],"enclosed":["Ⓔ","🄴"],"mod":["ᴱ"],"num":["3","€"],"multi":["|=","Ɛ"]},"e":{"cross":["е","ҽ","є","℮","ℯ","ⅇ","ε","ϵ","ҿ","ǝ","ə","ꬲ","ᴇ","∈","∊","ｅ"],"rare":["ꭼ","ℯ","ⅇ"],"accent":["è","é","ê","ë","ē","ĕ","ė","ę","ě","ȅ","ȇ","ȩ","ḕ","ḗ","ḙ","ḛ","ḝ","ẹ","ẻ","ẽ","ế","ề","ể","ễ","ệ"],"math":["𝐞","𝑒","𝒆","𝓮","𝔢","𝕖","𝖊","𝖾","𝗲","𝘦","𝙚","𝚎"],"enclosed":["ⓔ"],"mod":["ᵉ","ₑ"],"num":["3","€"],"multi":["ҽ","ɛ"]},"L":{"cross":["Ł","Ƚ","Ꝇ","ʟ","£","Ⅼ","Ｌ"],"rare":["Ꮮ","ᒪ","Ⳑ","ꓡ","ℒ","Ⅼ"],"accent":["Ĺ","Ļ","Ľ","Ḷ","Ḹ","Ḻ","Ḽ"],"math":["𝐋","𝐿","𝑳","𝓛","𝔏","𝕃","𝕷","𝖫","𝗟","𝘓","𝙇","𝙻"],"enclosed":["Ⓛ","🄻"],"mod":["ᴸ"],"num":["£"],"multi":["|_","I_"]},"l":{"cross":["ⅼ","ℓ","Ɩ","ǀ","І","Ι","ӏ","ɭ","ł","ʟ","Ɨ","∣","ǁ","ｌ"],"rare":["│","ᛁ","ꓲ","ℓ","ⅼ"],"accent":["ĺ","ļ","ľ","ḷ","ḹ","ḻ","ḽ"],"math":["𝐥","𝑙","𝒍","𝓁","𝓵","𝔩","𝕝","𝖑","𝗅","𝗹","𝘭","𝙡","𝚕"],"enclosed":["ⓛ"],"mod":["ˡ","ₗ"],"num":["1","|","¦"],"multi":["|","1","I"]},"G":{"cross":["Ԍ","Ɠ","ɢ","Ｇ"],"rare":["Ꮆ","ᏻ","ꓖ"],"accent":["Ĝ","Ğ","Ġ","Ģ","Ǧ","Ǵ","Ḡ"],"math":["𝐆","𝐺","𝑮","𝒢","𝓖","𝔊","𝔾","𝕲","𝖦","𝗚","𝘎","𝙂","𝙶"],"enclosed":["Ⓖ","🄶"],"mod":["ᴳ"],"num":["6"],"multi":["(_","Ԍ"]},"g":{"cross":["ɡ","ǥ","ɠ","ƍ","ɢ","ᶃ","ꬶ","ℊ","ｇ"],"rare":["ց","ℊ"],"accent":["ĝ","ğ","ġ","ģ","ǧ","ǵ","ḡ"],"math":["𝐠","𝑔","𝒈","𝓰","𝔤","𝕘","𝖌","𝗀","𝗴","𝘨","𝙜","𝚐"],"enclosed":["ⓖ"],"mod":["ᵍ"],"num":["9"],"multi":["ɡ","9"]},"R":{"cross":["Ʀ","Ɽ","Ɍ","ℛ","ℜ","ℝ","®","ʀ","Я","Ｒ"],"rare":["Ꭱ","ᖇ","ꓣ","ℛ","ℜ","ℝ"],"accent":["Ŕ","Ŗ","Ř","Ȑ","Ȓ","Ṙ","Ṛ","Ṝ","Ṟ"],"math":["𝐑","𝑅","𝑹","𝓡","𝕽","𝖱","𝗥","𝘙","𝙍","𝚁"],"enclosed":["Ⓡ","🄬","🅁"],"mod":["ᴿ"],"num":["®"],"multi":["Я","ʀ"]},"r":{"cross":["г","ᴦ","ɼ","ɽ","ɾ","ɿ","ʀ","ɹ","ɍ","ꭇ","ꭈ","ｒ"],"rare":["ⲅ","ᒥ"],"accent":["ŕ","ŗ","ř","ȑ","ȓ","ṙ","ṛ","ṝ","ṟ"],"math":["𝐫","𝑟","𝒓","𝓇","𝓻","𝔯","𝕣","𝖗","𝗋","𝗿","𝘳","𝙧","𝚛"],"enclosed":["ⓡ"],"mod":["ʳ","ᵣ"],"num":["®"],"multi":["ɾ","ʀ","г"]},"A":{"cross":["А","Α","Λ","∀","ᴀ","Ａ"],"rare":["Ꭺ","ᗅ","Ⲁ","ꓮ"],"accent":["À","Á","Â","Ã","Ä","Å","Ā","Ă","Ą","Ǎ","Ǟ","Ǡ","Ǻ","Ȁ","Ȃ","Ȧ","Ḁ","Ạ","Ả","Ấ","Ầ","Ẩ","Ẫ","Ậ","Ắ","Ằ","Ẳ","Ẵ","Ặ","Å"],"math":["𝐀","𝐴","𝑨","𝒜","𝓐","𝔄","𝔸","𝕬","𝖠","𝗔","𝘈","𝘼","𝙰"],"enclosed":["Ⓐ","🄰"],"mod":["ᴬ"],"num":["4","@"],"multi":["/\\","Λ","∆"]},"a":{"cross":["а","α","ɑ","ɒ","⍺","ᴀ","ª","ɐ","ᶏ","ⱥ","ａ"],"rare":["ª"],"accent":["à","á","â","ã","ä","å","ā","ă","ą","ǎ","ǟ","ǡ","ǻ","ȁ","ȃ","ȧ","ḁ","ạ","ả","ấ","ầ","ẩ","ẫ","ậ","ắ","ằ","ẳ","ẵ","ặ"],"math":["𝐚","𝑎","𝒂","𝒶","𝓪","𝔞","𝕒","𝖆","𝖺","𝗮","𝘢","𝙖","𝚊"],"enclosed":["ⓐ"],"mod":["ᵃ","ₐ"],"num":["4","@"],"multi":["ɑ","@"]},"M":{"cross":["М","Μ","Ϻ","Ⅿ","Ɱ","ᴍ","ℳ","Ｍ"],"rare":["Ꮇ","Ⲙ","ᗰ","ꓟ","ℳ","Ⅿ"],"accent":["Ḿ","Ṁ","Ṃ"],"math":["𝐌","𝑀","𝑴","𝓜","𝔐","𝕄","𝕸","𝖬","𝗠","𝘔","𝙈","𝙼"],"enclosed":["Ⓜ","🄼"],"mod":["ᴹ"],"num":["₥"],"multi":["IVI","|V|","ʌʌ","/\\/\\"]},"m":{"cross":["м","ⅿ","ᴍ","ɱ","ɯ","ᵯ","ꭑ","ᴟ","ϻ","ｍ"],"rare":["ⅿ"],"accent":["ḿ","ṁ","ṃ"],"math":["𝐦","𝑚","𝒎","𝓂","𝓶","𝔪","𝕞","𝖒","𝗆","𝗺","𝘮","𝙢","𝚖"],"enclosed":["ⓜ"],"mod":["ᵐ","ₘ"],"num":["₥"],"multi":["rn","ɾn","ʀn","nn","rη"]}};
+  var FOCUS = {"T":{"cross":["Т","Τ","Ŧ","Ƭ","Ʈ","ᴛ","†","⊤","Ｔ"],"rare":["Ⲧ","Ꭲ","ꓔ","丅","ㄒ","Ꮖ"],"accent":["Ţ","Ť","Ț","Ṫ","Ṭ","Ṯ","Ṱ"],"math":["𝐓","𝑇","𝑻","𝒯","𝓣","𝔗","𝕋","𝕿","𝖳","𝗧","𝘛","𝙏","𝚃"],"enclosed":["Ⓣ","🅃"],"mod":["ᵀ"],"num":["7"],"multi":["|‾","⊤","+"]},"t":{"cross":["т","ţ","ť","ṭ","ț","ŧ","ƭ","ʈ","ƫ","ꞇ","τ","ᴛ","†","ｔ"],"rare":["ϯ","ⲧ"],"accent":["ţ","ť","ț","ṫ","ṭ","ṯ","ṱ","ẗ"],"math":["𝐭","𝑡","𝒕","𝓉","𝓽","𝔱","𝕥","𝖙","𝗍","𝘁","𝘵","𝙩","𝚝"],"enclosed":["ⓣ"],"mod":["ᵗ","ₜ"],"num":["7","+"],"multi":["+","†"]},"E":{"cross":["Е","Ε","Ɛ","Ǝ","ᴇ","ℰ","Ｅ"],"rare":["Ⲉ","Ꭼ","ꓰ","ᕮ","ℰ"],"accent":["È","É","Ê","Ë","Ē","Ĕ","Ė","Ę","Ě","Ȅ","Ȇ","Ȩ","Ḕ","Ḗ","Ḙ","Ḛ","Ḝ","Ẹ","Ẻ","Ẽ","Ế","Ề","Ể","Ễ","Ệ"],"math":["𝐄","𝐸","𝑬","𝓔","𝔈","𝔼","𝕰","𝖤","𝗘","𝘌","𝙀","𝙴"],"enclosed":["Ⓔ","🄴"],"mod":["ᴱ"],"num":["3","€"],"multi":["|=","Ɛ"]},"e":{"cross":["е","ҽ","є","℮","ℯ","ⅇ","ε","ϵ","ҿ","ǝ","ə","ꬲ","ᴇ","∈","∊","ｅ"],"rare":["ꭼ","ℯ","ⅇ"],"accent":["è","é","ê","ë","ē","ĕ","ė","ę","ě","ȅ","ȇ","ȩ","ḕ","ḗ","ḙ","ḛ","ḝ","ẹ","ẻ","ẽ","ế","ề","ể","ễ","ệ"],"math":["𝐞","𝑒","𝒆","𝓮","𝔢","𝕖","𝖊","𝖾","𝗲","𝘦","𝙚","𝚎"],"enclosed":["ⓔ"],"mod":["ᵉ","ₑ"],"num":["3","€"],"multi":["ҽ","ɛ"]},"L":{"cross":["Ł","Ƚ","Ꝇ","ʟ","£","Ⅼ","Ｌ"],"rare":["Ꮮ","ᒪ","Ⳑ","ꓡ","ℒ","Ⅼ"],"accent":["Ĺ","Ļ","Ľ","Ḷ","Ḹ","Ḻ","Ḽ"],"math":["𝐋","𝐿","𝑳","𝓛","𝔏","𝕃","𝕷","𝖫","𝗟","𝘓","𝙇","𝙻"],"enclosed":["Ⓛ","🄻"],"mod":["ᴸ"],"num":["£"],"multi":["|_","I_"]},"l":{"cross":["ⅼ","ℓ","Ɩ","ǀ","І","Ι","ӏ","ɭ","ł","ʟ","Ɨ","∣","ǁ","ｌ"],"rare":["│","ᛁ","ꓲ","ℓ","ⅼ"],"accent":["ĺ","ļ","ľ","ḷ","ḹ","ḻ","ḽ"],"math":["𝐥","𝑙","𝒍","𝓁","𝓵","𝔩","𝕝","𝖑","𝗅","𝗹","𝘭","𝙡","𝚕"],"enclosed":["ⓛ"],"mod":["ˡ","ₗ"],"num":["1","|","¦"],"multi":["|","1","I"]},"G":{"cross":["Ԍ","Ɠ","ɢ","Ｇ"],"rare":["Ꮆ","ᏻ","ꓖ"],"accent":["Ĝ","Ğ","Ġ","Ģ","Ǧ","Ǵ","Ḡ"],"math":["𝐆","𝐺","𝑮","𝒢","𝓖","𝔊","𝔾","𝕲","𝖦","𝗚","𝘎","𝙂","𝙶"],"enclosed":["Ⓖ","🄶"],"mod":["ᴳ"],"num":["6"],"multi":["(_","Ԍ"]},"g":{"cross":["ɡ","ǥ","ɠ","ƍ","ɢ","ᶃ","ꬶ","ℊ","ｇ"],"rare":["ց","ℊ"],"accent":["ĝ","ğ","ġ","ģ","ǧ","ǵ","ḡ"],"math":["𝐠","𝑔","𝒈","𝓰","𝔤","𝕘","𝖌","𝗀","𝗴","𝘨","𝙜","𝚐"],"enclosed":["ⓖ"],"mod":["ᵍ"],"num":["9"],"multi":["ɡ","9"]},"R":{"cross":["Ʀ","Ɽ","Ɍ","ℛ","ℜ","ℝ","®","ʀ","Я","Ｒ"],"rare":["Ꭱ","ᖇ","ꓣ","ℛ","ℜ","ℝ"],"accent":["Ŕ","Ŗ","Ř","Ȑ","Ȓ","Ṙ","Ṛ","Ṝ","Ṟ"],"math":["𝐑","𝑅","𝑹","𝓡","𝕽","𝖱","𝗥","𝘙","𝙍","𝚁"],"enclosed":["Ⓡ","🄬","🅁"],"mod":["ᴿ"],"num":["®"],"multi":["Я","ʀ"]},"r":{"cross":["г","ᴦ","ɼ","ɽ","ɾ","ɿ","ʀ","ɹ","ɍ","ꭇ","ꭈ","ｒ"],"rare":["ⲅ","ᒥ"],"accent":["ŕ","ŗ","ř","ȑ","ȓ","ṙ","ṛ","ṝ","ṟ"],"math":["𝐫","𝑟","𝒓","𝓇","𝓻","𝔯","𝕣","𝖗","𝗋","𝗿","𝘳","𝙧","𝚛"],"enclosed":["ⓡ"],"mod":["ʳ","ᵣ"],"num":["®"],"multi":["ɾ","ʀ","г"]},"A":{"cross":["А","Α","Λ","∀","ᴀ","Ａ"],"rare":["Ꭺ","ᗅ","Ⲁ","ꓮ"],"accent":["À","Á","Â","Ã","Ä","Å","Ā","Ă","Ą","Ǎ","Ǟ","Ǡ","Ǻ","Ȁ","Ȃ","Ȧ","Ḁ","Ạ","Ả","Ấ","Ầ","Ẩ","Ẫ","Ậ","Ắ","Ằ","Ẳ","Ẵ","Ặ","Å"],"math":["𝐀","𝐴","𝑨","𝒜","𝓐","𝔄","𝔸","𝕬","𝖠","𝗔","𝘈","𝘼","𝙰"],"enclosed":["Ⓐ","🄰"],"mod":["ᴬ"],"num":["4","@"],"multi":["/\\","Λ","∆"]},"a":{"cross":["а","α","ɑ","ɒ","⍺","ᴀ","ª","ɐ","ᶏ","ⱥ","ａ"],"rare":["ª"],"accent":["à","á","â","ã","ä","å","ā","ă","ą","ǎ","ǟ","ǡ","ǻ","ȁ","ȃ","ȧ","ḁ","ạ","ả","ấ","ầ","ẩ","ẫ","ậ","ắ","ằ","ẳ","ẵ","ặ"],"math":["𝐚","𝑎","𝒂","𝒶","𝓪","𝔞","𝕒","𝖆","𝖺","𝗮","𝘢","𝙖","𝚊"],"enclosed":["ⓐ"],"mod":["ᵃ","ₐ"],"num":["4","@"],"multi":["ɑ","@"]},"M":{"cross":["М","Μ","Ϻ","Ⅿ","Ɱ","ᴍ","ℳ","Ｍ"],"rare":["Ꮇ","Ⲙ","ᗰ","ꓟ","ℳ","Ⅿ"],"accent":["Ḿ","Ṁ","Ṃ"],"math":["𝐌","𝑀","𝑴","𝓜","𝔐","𝕄","𝕸","𝖬","𝗠","𝘔","𝙈","𝙼"],"enclosed":["Ⓜ","🄼"],"mod":["ᴹ"],"num":["₥"],"multi":["IVI","|V|","ʌʌ","/\\/\\"]},"m":{"cross":["м","ⅿ","ᴍ","ɱ","ɯ","ᵯ","ꭑ","ᴟ","ϻ","ｍ"],"rare":["ⅿ"],"accent":["ḿ","ṁ","ṃ"],"math":["𝐦","𝑚","𝒎","𝓂","𝓶","𝔪","𝕞","𝖒","𝗆","𝗺","𝘮","𝙢","𝚖"],"enclosed":["ⓜ"],"mod":["ᵐ","ₘ"],"num":["₥"],"multi":["rn","ɾn","ʀn","nn","rη"]}};
 
   /* Các chữ còn lại */
   var BASE = {
@@ -584,7 +587,6 @@
     j:['ʝ','ĵ']
   };
 
-
   /* ---------- Sinh ký tự toán học ---------- */
   var A0=65, Z0=90, a0=97, z0=122, d0=48, d9=57;
   function mathAlpha(ch, up, low, dig, holes){
@@ -665,12 +667,32 @@
     return out;
   }
 
+  /* ---------- Hàm cốt lõi (Đã thêm Zero-width) ---------- */
   function homoglyphOnce(raw, o){
     var out = '';
+    // Các ký tự vô hình: ZWSP, ZWNJ, ZWJ, Word Joiner
+    var ZW_CHARS = ['\u200B', '\u200C', '\u200D', '\u2060']; 
+    
     for (var i = 0; i < raw.length; i++){
       var ch = raw[i], pool = poolFor(ch, o);
-      if (!pool.length || Math.random() * 100 > o.intensity){ out += ch; continue; }
-      out += pool[Math.floor(Math.random() * pool.length)];
+      
+      // 1. Thay thế Homoglyph
+      if (!pool.length || Math.random() * 100 > o.intensity){ 
+        out += ch; 
+      } else {
+        out += pool[Math.floor(Math.random() * pool.length)];
+      }
+
+      // 2. Chèn ký tự vô hình (Zero-width)
+      if (o.invisible && ch !== ' ' && i < raw.length - 1) {
+        if (Math.random() > 0.4) {
+          out += ZW_CHARS[Math.floor(Math.random() * ZW_CHARS.length)];
+          
+          if(Math.random() > 0.9) {
+             out += ZW_CHARS[Math.floor(Math.random() * ZW_CHARS.length)];
+          }
+        }
+      }
     }
     return out;
   }
@@ -688,6 +710,7 @@
   var optMod = document.getElementById('opt-mod');
   var optEnclosed = document.getElementById('opt-enclosed');
   var optRare = document.getElementById('opt-rare');
+  var optInvisible = document.getElementById('opt-invisible'); // Thêm biến Invisible
   var variantCountEl = document.getElementById('variant-count');
   var lookOutput = document.getElementById('look-output');
   var lookCountEl = document.getElementById('look-count');
@@ -700,7 +723,8 @@
       intensity: parseInt(intensityEl.value, 10),
       nums: optNums.checked, multi: optMulti.checked, accent: optAccent.checked,
       math: optMath.checked, mod: optMod.checked, enclosed: optEnclosed.checked,
-      rare: optRare.checked
+      rare: optRare.checked,
+      invisible: optInvisible.checked // Cập nhật options
     };
   }
   function currentText(){ return input.value.trim() ? input.value : DEMO; }
@@ -798,7 +822,9 @@
   intensityEl.addEventListener('input', function(){
     intensityValueEl.textContent = intensityEl.value + '%'; renderLook();
   });
-  [optNums, optMulti, optAccent, optMath, optMod, optEnclosed, optRare, variantCountEl].forEach(function(el){
+  
+  // Cập nhật mảng lắng nghe sự kiện
+  [optNums, optMulti, optAccent, optMath, optMod, optEnclosed, optRare, optInvisible, variantCountEl].forEach(function(el){
     el.addEventListener('change', function(){ renderLook(); buildTable(); });
   });
 
@@ -814,7 +840,7 @@
       });
     });
     var all = focusOrder.concat(rest);
-    var o = {nums:true, multi:true, accent:true, math:true, mod:true, enclosed:true, rare:true};
+    var o = {nums:true, multi:true, accent:true, math:true, mod:true, enclosed:true, rare:true, invisible:false};
     var frag = document.createDocumentFragment();
     all.forEach(function(ch){
       var pool = poolFor(ch, o);
@@ -840,11 +866,13 @@
   /* ---------- Hero ---------- */
   var heroPreview = document.getElementById('hero-preview');
   var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  
+  // Đã update HERO_OPTS để có sẵn tuỳ chọn invisible
   var HERO_OPTS = [
-    {intensity:100, rare:false, accent:false, nums:false, math:false, mod:false, enclosed:false, multi:false},
-    {intensity:100, rare:false, accent:true,  nums:true,  math:false, mod:false, enclosed:false, multi:false},
-    {intensity:100, rare:true,  accent:false, nums:false, math:false, mod:false, enclosed:false, multi:false},
-    {intensity:100, rare:false, accent:false, nums:false, math:true,  mod:false, enclosed:false, multi:false}
+    {intensity:100, rare:false, accent:false, nums:false, math:false, mod:false, enclosed:false, multi:false, invisible:false},
+    {intensity:100, rare:false, accent:true,  nums:true,  math:false, mod:false, enclosed:false, multi:false, invisible:true},
+    {intensity:100, rare:true,  accent:false, nums:false, math:false, mod:false, enclosed:false, multi:false, invisible:false},
+    {intensity:100, rare:false, accent:false, nums:false, math:true,  mod:false, enclosed:false, multi:false, invisible:false}
   ];
   var heroIndex = 0;
   heroPreview.textContent = homoglyphOnce(DEMO, HERO_OPTS[0]);
